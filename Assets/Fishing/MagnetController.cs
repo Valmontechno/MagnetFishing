@@ -6,7 +6,7 @@ public class MagnetController : MonoBehaviour
     Rigidbody2D rb;
 
     [Space]
-    [SerializeField] Transform startPoint;
+    public Transform startPoint;
     [SerializeField] float startRadius;
 
     [Space]
@@ -25,6 +25,8 @@ public class MagnetController : MonoBehaviour
     [SerializeField] float masse;
     [SerializeField] float releaseFactor;
 
+    FishingHandler fishingHandler;
+
     Vector2 mouseInput = Vector2.zero;
     float scrollInput = 0;
     bool holding = false;
@@ -33,14 +35,37 @@ public class MagnetController : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         rb = GetComponent<Rigidbody2D>();
+
+        gameObject.SetActive(false);
     }
 
-    public void StartFishing()
+    private void OnEnable()
     {
-        gameObject.SetActive(true);
+        gameManager.InputActions.Fishing.Enable();
+    }
 
+    private void OnDisable()
+    {
+        gameManager.InputActions.Fishing.Disable();
+    }
+
+    public void ResetPosition()
+    {
         transform.position = startPoint.position;
         rb.linearVelocity = Vector3.zero;
+    }
+
+    public void StartFishing(FishingHandler fishingHandler)
+    {
+        this.fishingHandler = fishingHandler;
+
+        gameObject.SetActive(true);
+    }
+
+    void EndFishing(bool succes)
+    {
+        gameObject.SetActive(false);
+        fishingHandler.EndFishing(succes);
     }
 
     private void Update()
@@ -49,6 +74,11 @@ public class MagnetController : MonoBehaviour
         if (scrollEnabled)
             scrollInput += gameManager.InputActions.Fishing.Pull.ReadValue<float>();
         holding = gameManager.InputActions.Fishing.Hold.ReadValue<float>() > 0;
+
+        if (transform.position.y <= 0)
+        {
+            EndFishing(true);
+        }
     }
 
     private void FixedUpdate()

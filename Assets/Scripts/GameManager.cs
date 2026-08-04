@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 
     public InputActions InputActions {get; private set;}
 
+    public Sea sea;
+
 
     private void Awake()
     {
@@ -15,7 +17,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
 
             InputActions = new();
-            InputActions.Enable();
         }
         else
         {
@@ -28,4 +29,14 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
+
+#if !UNITY_EDITOR
+    void OnGUI()
+    {
+        GUI.Label(
+            new Rect(10, 10, 300, 30),
+            $"FPS: {(1f / Time.unscaledDeltaTime):F0}"
+        );
+    }
+#endif
 }

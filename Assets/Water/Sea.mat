@@ -54,16 +54,22 @@ Material:
     - _Distance: 200
     - _FlowSpeed: 0.1
     - _FoamAmount: 3
-    - _FoamCutoff: 1.15
+    - _FoamCutoff: 1.43
     - _FoamDensity: 7.5
     - _FoamScale: 15
     - _FoamSpeed: 1
+    - _Frequency: 28.76
+    - _PatternCutoff: 100
+    - _PatternDensity: 7.5
+    - _PatternSpeed: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RippleCutoff: 300
     - _RippleDensity: 7.5
+    - _RippleDuration: 0.4
+    - _RippleEx: 5
     - _RippleOffForce: 0
-    - _RippleSpeed: 2
+    - _RippleSpeed: 1.3
     - _Scale: 4
     - _WaveHeight: 0.5
     - _WaveSpeed: 0.2
@@ -72,8 +78,9 @@ Material:
     - _b: 3.2
     m_Colors:
     - _FlowDirection: {r: 1, g: 0, b: 0, a: 0}
-    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RippleColor: {r: 0.5529096, g: 2.015, b: 2.307419, a: 1}
-    - _WaterColor: {r: 0, g: 0.51888037, b: 1, a: 1}
+    - _FoamColor: {r: 0.796, g: 0.96599996, b: 1, a: 1}
+    - _PatternColor: {r: 0.27413988, g: 0.9952469, b: 1.1382765, a: 1}
+    - _RippleColor: {r: 0.38599998, g: 0.8937308, b: 1, a: 0}
+    - _WaterColor: {r: 0, g: 0.5451176, b: 0.7056604, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
