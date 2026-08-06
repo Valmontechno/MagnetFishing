@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class FishingHandler : MonoBehaviour
 {
+    GameManager gameManager;
+
     [Space]
     [SerializeField] float scale;
 
@@ -15,9 +18,17 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] new GameObject camera;
     [SerializeField] GameObject fishingFloat;
 
-    Action endFishingCallback;
+    //Action endFishingCallback;
 
     int collisionCount = 0;
+
+    SubmergedItem submergedItem;
+    GameObject obstacle;
+
+    private void Awake()
+    {
+        gameManager = GameManager.Instance;
+    }
 
     Vector3 ToLocal3D(Vector2 pos, float y=0)
     {
@@ -54,41 +65,102 @@ public class FishingHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        collisionCount++;
+        if (!other.isTrigger)
+        {
+            collisionCount++;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        collisionCount--;
+        if (!other.isTrigger)
+        {
+            collisionCount--;
+        }
     }
 
-    public void StartFishing(Action endFishingCallback)
+    public IEnumerator Fishing()
     {
-        this.endFishingCallback = endFishingCallback;
+        // Start
+        {
+            enabled = true;
+            camera.SetActive(true);
+            magnet2D.ResetPosition();
 
-        enabled = true;
+            yield return new WaitForSeconds(2);
 
-        camera.SetActive(true);
-        magnet2D.ResetPosition();
+            submergedItem = gameManager.overlappedSubmergedItem;
 
-        Invoke(nameof(Fishing), 2);
+            if (submergedItem.item.obstacle != null)
+                obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
+
+            fishingFloat.SetActive(true);
+            magnet2D.StartFishing(submergedItem.item.masse);
+        }
+
+        while (magnet2D.CurrentState == MagnetController.State.Fishing) { yield return null; }
+
+        // End
+        {
+            enabled = false;
+            camera.SetActive(false);
+            fishingFloat.SetActive(false);
+
+            if (obstacle != null)
+                Destroy(obstacle);
+
+
+            if (magnet2D.CurrentState == MagnetController.State.Success)
+            {
+                submergedItem.Remove();
+
+                gameManager.Inventory[submergedItem.item] = new(gameManager.Inventory.Count);
+            }
+        }
     }
 
-    void Fishing()
-    {
-        fishingFloat.SetActive(true);
-        magnet2D.StartFishing(this);
-    }
+    //public void StartFishing(Action endFishingCallback)
+    //{
+    //    this.endFishingCallback = endFishingCallback;
 
-    public void EndFishing(bool succes)
-    {
-        enabled = false;
+    //    //enabled = true;
 
-        camera.SetActive(false);
-        fishingFloat.SetActive(false);
+    //    //camera.SetActive(true);
+    //    //magnet2D.ResetPosition();
 
-        endFishingCallback.Invoke();
-    }
+    //    //Invoke(nameof(Fishing), 2);
+    //}
+
+    //void Fishing()
+    //{
+    //    submergedItem = gameManager.overlappedSubmergedItem;
+
+    //    if (submergedItem.item.obstacle != null)
+    //        obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
+
+    //    fishingFloat.SetActive(true);
+    //    magnet2D.StartFishing(this, submergedItem.item.masse);
+    //}
+
+    //public void EndFishing(bool succes)
+    //{
+    //    enabled = false;
+
+    //    if (obstacle != null)
+    //        Destroy(obstacle);
+
+    //    camera.SetActive(false);
+    //    fishingFloat.SetActive(false);
+
+    //    if (succes)
+    //    {
+    //        submergedItem.Remove();
+
+    //        gameManager.Inventory[submergedItem.item] = new(gameManager.Inventory.Count);
+    //    }
+
+    //    endFishingCallback.Invoke();
+    //}
 
     private void Update()
     {
@@ -97,6 +169,6 @@ public class FishingHandler : MonoBehaviour
 
     public bool CanFish()
     {
-        return collisionCount == 0;
+        return collisionCount == 0 && GameManager.Instance.overlappedSubmergedItem != null;
     }
 }

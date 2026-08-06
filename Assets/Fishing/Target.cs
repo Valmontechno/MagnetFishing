@@ -6,12 +6,18 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        collisionCount++;
+        if (!other.isTrigger)
+        {
+            collisionCount++;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        collisionCount--;
+        if (!other.isTrigger)
+        {
+            collisionCount--;
+        }
     }
 
     public bool CanLaunch()

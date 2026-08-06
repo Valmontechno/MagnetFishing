@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MagnetController : MonoBehaviour
@@ -16,8 +17,9 @@ public class MagnetController : MonoBehaviour
     [SerializeField] float pushForce;
 
     [Space]
-    [SerializeField] bool scrollEnabled;
+    public bool scrollEnabled;
     [SerializeField] float scrollPullForce;
+    [SerializeField] float scrollPushForce;
     [SerializeField, Range(0, 1)] float scrollPullDrag;
 
     [Space]
@@ -25,11 +27,12 @@ public class MagnetController : MonoBehaviour
     [SerializeField] float masse;
     [SerializeField] float releaseFactor;
 
-    FishingHandler fishingHandler;
-
     Vector2 mouseInput = Vector2.zero;
     float scrollInput = 0;
     bool holding = false;
+
+    public enum State { Fishing, Success, Failure }
+    public State CurrentState { get; private set; }
 
     private void Awake()
     {
@@ -55,17 +58,19 @@ public class MagnetController : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
     }
 
-    public void StartFishing(FishingHandler fishingHandler)
+    public void StartFishing(float masse)
     {
-        this.fishingHandler = fishingHandler;
+        CurrentState = State.Fishing;
+
+        this.masse = masse;
 
         gameObject.SetActive(true);
     }
 
-    void EndFishing(bool succes)
+    void EndFishing(State state)
     {
+        CurrentState = state;
         gameObject.SetActive(false);
-        fishingHandler.EndFishing(succes);
     }
 
     private void Update()
@@ -77,7 +82,7 @@ public class MagnetController : MonoBehaviour
 
         if (transform.position.y <= 0)
         {
-            EndFishing(true);
+            EndFishing(State.Success);
         }
     }
 
@@ -94,7 +99,7 @@ public class MagnetController : MonoBehaviour
         {
             velocity.x = mouseInput.x * moveForce / 1000;
             velocity.y = mouseInput.y * (mouseInput.y < 0 ? pullForce : (isGrounded ? 0 : pushForce)) / 1000;
-            velocity.y += Mathf.Min(scrollInput, 0) * scrollPullForce;
+            velocity.y += scrollInput * (scrollInput < 0 ? scrollPullForce : (isGrounded ? 0 : scrollPushForce));
             velocity /= masse;
         }
 

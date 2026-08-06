@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -121,16 +122,25 @@ public class BoatController : MonoBehaviour
 
     void StartFishing()
     {
+        StartCoroutine(Fishing());
+
+        //fishingHandler.StartFishing(EndFishing);
+    }
+
+    IEnumerator Fishing()
+    {
         enabled = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        fishingHandler.StartFishing(EndFishing);
+        yield return StartCoroutine(fishingHandler.Fishing());
+
+        enabled = true;
+        magnetLaunched = false;
     }
 
     void EndFishing()
     {
-        enabled = true;
-        magnetLaunched = false;
+        
     }
 }

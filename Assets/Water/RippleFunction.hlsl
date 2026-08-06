@@ -24,10 +24,10 @@ void RippleFunction_float(
         float date = _ripples[i].w;
 
         float age = clamp((time - date) / duration, 0, 1);
-        radius = radius + age * speed;
 
+        radius = radius + age * speed;
         float extent = max(radius - distance(center, position), 0);
-        result += sin((extent + time) * frequency) * extent * (1 - clamp((time - date) / duration, 0, 1));
+        result += sin((extent + time) * frequency) * extent * (1 - age);
         
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -6,7 +7,14 @@ public class GameManager : MonoBehaviour
 
     public InputActions InputActions {get; private set;}
 
-    public Sea sea;
+    [HideInInspector] public Sea sea;
+
+    [HideInInspector] public SubmergedItem overlappedSubmergedItem = null;
+
+    public Dictionary<Item, ItemSlot> Inventory { get; private set; }
+    public GameSettings GameSettings { get; private set; }
+
+    readonly bool[] pausedInputsState = new bool[3];
 
 
     private void Awake()
@@ -17,6 +25,9 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
 
             InputActions = new();
+
+            Inventory = new();
+            GameSettings = new();
         }
         else
         {
@@ -39,4 +50,36 @@ public class GameManager : MonoBehaviour
         );
     }
 #endif
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+
+        pausedInputsState[0] = InputActions.Fishing.enabled;
+        pausedInputsState[1] = InputActions.Player.enabled;
+        pausedInputsState[2] = InputActions.Boat.enabled;
+        InputActions.Fishing.Disable();
+        InputActions.Player.Disable();
+        InputActions.Boat.Disable();
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1;
+
+        if (pausedInputsState[0]) InputActions.Fishing.Enable();
+        if (pausedInputsState[1]) InputActions.Player.Enable();
+        if (pausedInputsState[2]) InputActions.Boat.Enable();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void ApplySettings()
+    {
+        FindAnyObjectByType<MagnetController>(FindObjectsInactive.Include).scrollEnabled = GameSettings.scrollEnabled;
+    }
 }
