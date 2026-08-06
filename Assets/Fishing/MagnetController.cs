@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MagnetController : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class MagnetController : MonoBehaviour
     [Space]
     [SerializeField] float gravity;
     [SerializeField] float masse;
+    public const float refMasse = 3;
     [SerializeField] float releaseFactor;
 
     Vector2 mouseInput = Vector2.zero;
@@ -98,8 +100,8 @@ public class MagnetController : MonoBehaviour
         if (holding)
         {
             velocity.x = mouseInput.x * moveForce / 1000;
-            velocity.y = mouseInput.y * (mouseInput.y < 0 ? pullForce : (isGrounded ? 0 : pushForce)) / 1000;
-            velocity.y += scrollInput * (scrollInput < 0 ? scrollPullForce : (isGrounded ? 0 : scrollPushForce));
+            velocity.y = mouseInput.y * (mouseInput.y < 0 ? pullForce : (isGrounded ? 0 : pushForce * masse / refMasse)) / 1000;
+            velocity.y += scrollInput * (scrollInput < 0 ? scrollPullForce : (isGrounded ? 0 : scrollPushForce * masse / refMasse));
             velocity /= masse;
         }
 

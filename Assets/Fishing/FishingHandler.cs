@@ -16,9 +16,8 @@ public class FishingHandler : MonoBehaviour
     [Space]
     [SerializeField] GameObject target;
     [SerializeField] new GameObject camera;
-    [SerializeField] GameObject fishingFloat;
-
-    //Action endFishingCallback;
+    [SerializeField] RippleGenerator fishingFloat;
+    [SerializeField] Menu menu;
 
     int collisionCount = 0;
 
@@ -94,7 +93,8 @@ public class FishingHandler : MonoBehaviour
             if (submergedItem.item.obstacle != null)
                 obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
 
-            fishingFloat.SetActive(true);
+            fishingFloat.gameObject.SetActive(true);
+            fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
             magnet2D.StartFishing(submergedItem.item.masse);
         }
 
@@ -104,7 +104,8 @@ public class FishingHandler : MonoBehaviour
         {
             enabled = false;
             camera.SetActive(false);
-            fishingFloat.SetActive(false);
+            fishingFloat.gameObject.SetActive(false);
+            fishingFloat.factor = 1;
 
             if (obstacle != null)
                 Destroy(obstacle);
@@ -114,53 +115,15 @@ public class FishingHandler : MonoBehaviour
             {
                 submergedItem.Remove();
 
-                gameManager.Inventory[submergedItem.item] = new(gameManager.Inventory.Count);
+                yield return new WaitForSeconds(1);
+
+                ItemSlot itemSlot = new(gameManager.Inventory.Count);
+                //menu.OpenItemRecord(submergedItem.item, true, itemSlot);
+                //while (menu.ItemRecordOpen) { yield return null; }
+                gameManager.Inventory[submergedItem.item] = itemSlot;
             }
         }
     }
-
-    //public void StartFishing(Action endFishingCallback)
-    //{
-    //    this.endFishingCallback = endFishingCallback;
-
-    //    //enabled = true;
-
-    //    //camera.SetActive(true);
-    //    //magnet2D.ResetPosition();
-
-    //    //Invoke(nameof(Fishing), 2);
-    //}
-
-    //void Fishing()
-    //{
-    //    submergedItem = gameManager.overlappedSubmergedItem;
-
-    //    if (submergedItem.item.obstacle != null)
-    //        obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
-
-    //    fishingFloat.SetActive(true);
-    //    magnet2D.StartFishing(this, submergedItem.item.masse);
-    //}
-
-    //public void EndFishing(bool succes)
-    //{
-    //    enabled = false;
-
-    //    if (obstacle != null)
-    //        Destroy(obstacle);
-
-    //    camera.SetActive(false);
-    //    fishingFloat.SetActive(false);
-
-    //    if (succes)
-    //    {
-    //        submergedItem.Remove();
-
-    //        gameManager.Inventory[submergedItem.item] = new(gameManager.Inventory.Count);
-    //    }
-
-    //    endFishingCallback.Invoke();
-    //}
 
     private void Update()
     {

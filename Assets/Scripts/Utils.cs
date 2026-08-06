@@ -22,4 +22,13 @@ public static class Utils
         vector.y = y;
         return vector;
     }
+
+    public static float Warp180(float value)
+    {
+        if (value > 180)
+            return value - 360;
+        else if (value <= -180)
+            return value + 360;
+        return value;
+    }
 }

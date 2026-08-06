@@ -8,5 +8,6 @@ public class ItemSlot
     public ItemSlot(int registrationIndex)
     {
         this.registrationIndex = registrationIndex;
+        userName = "";
     }
 }

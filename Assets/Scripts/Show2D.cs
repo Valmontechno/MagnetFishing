@@ -12,20 +12,21 @@ public class Show2D : MonoBehaviour
         if (!enabled) return;
 
         Gizmos.color = color;
+        Gizmos.matrix = transform.localToWorldMatrix;
 
         if (TryGetComponent(out BoxCollider2D box))
         {
             if (fill)
-                Gizmos.DrawCube(transform.position + (Vector3)box.offset, box.size);
+                Gizmos.DrawCube(box.offset, box.size);
             else
-                Gizmos.DrawWireCube(transform.position + (Vector3)box.offset, box.size);
+                Gizmos.DrawWireCube(box.offset, box.size);
         }
         else if (TryGetComponent(out CircleCollider2D circle))
         {
             if (fill)
-                Gizmos.DrawSphere(transform.position + (Vector3)circle.offset, circle.radius);
+                Gizmos.DrawSphere(circle.offset, circle.radius);
             else
-                Gizmos.DrawWireSphere(transform.position + (Vector3)circle.offset, circle.radius);
+                Gizmos.DrawWireSphere(circle.offset, circle.radius);
         }
     }
 }

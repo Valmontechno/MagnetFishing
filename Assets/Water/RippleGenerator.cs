@@ -5,6 +5,7 @@ public class RippleGenerator : MonoBehaviour
     [SerializeField] float radius = 1;
     [SerializeField] float maxRadius = 1;
     [SerializeField] float minSpeed;
+    [HideInInspector] public float factor = 1;
 
     Vector2 previousPos;
 
@@ -20,7 +21,7 @@ public class RippleGenerator : MonoBehaviour
 
         if (speed >= minSpeed)
         {
-            GameManager.Instance.sea.GenerateRipple(position, Mathf.Min(radius * speed, maxRadius));
+            GameManager.Instance.sea.GenerateRipple(position, Mathf.Min(radius * factor * speed, maxRadius));
             
         }
 

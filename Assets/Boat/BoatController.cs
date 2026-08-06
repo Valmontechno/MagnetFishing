@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,15 +12,23 @@ public class BoatController : MonoBehaviour
 
     [Space]
     [SerializeField] new GameObject camera;
+    CinemachineOrbitalFollow orbitalFollow;
     [SerializeField] Transform fishingPivot;
     [SerializeField] GameObject fishingFloat;
     [SerializeField] Target target;
 
     [Space]
     [SerializeField] float accel;
-    [SerializeField] float maxSpeed;
-    [SerializeField, Range(0, 1)] float drag;
     [SerializeField] float angularAccel;
+
+    [Space]
+    [SerializeField] float recenterCameraForwardSpeed;
+    [SerializeField] float recenterCameraTurnSpeed;
+    [SerializeField] float recenterCameraAccel;
+    [SerializeField] float recenterCameraDelay;
+    float recenterCameraSpeed;
+    float recenterCameraTargetSpeed;
+    float recenterCameraTimer = 0;
 
     [Space]
     [SerializeField] float launchMaxSpeed;
@@ -29,13 +38,18 @@ public class BoatController : MonoBehaviour
     bool magnetLaunched = false;
     Vector2 relativeFloatPos;
 
+    Vector2 moveInput;
+
     private void Awake()
     {
         gameManager = GameManager.Instance;
         rb = GetComponent<Rigidbody>();
+        orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
         fishingHandler = GetComponentInChildren<FishingHandler>(true);
 
         gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
+
+        ResetCamera();
     }
 
     private void OnDestroy()
@@ -47,12 +61,14 @@ public class BoatController : MonoBehaviour
     {
         gameManager.InputActions.Boat.Enable();
         camera.SetActive(true);
+
+        orbitalFollow.VerticalAxis.Value = orbitalFollow.VerticalAxis.Center;
     }
 
     private void OnDisable()
     {
         gameManager.InputActions.Boat.Disable();
-        camera.SetActive(false);
+        //camera.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()
@@ -60,6 +76,14 @@ public class BoatController : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, floatMinDistance);
         Gizmos.DrawWireSphere(transform.position, floatMaxDistance);
+    }
+
+    void ResetCamera()
+    {
+        orbitalFollow.HorizontalAxis.Center = Utils.Warp180(transform.eulerAngles.y);
+        orbitalFollow.HorizontalAxis.Value = orbitalFollow.HorizontalAxis.Center;
+        orbitalFollow.VerticalAxis.Value = orbitalFollow.VerticalAxis.Center;
+        recenterCameraSpeed = 0;
     }
 
     private void FixedUpdate()
@@ -74,12 +98,7 @@ public class BoatController : MonoBehaviour
 
     void Navigate()
     {
-        Vector2 moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
-
-        rb.linearVelocity *= drag;
         rb.linearVelocity += moveInput.y * accel * transform.forward;
-        rb.maxLinearVelocity = maxSpeed;
-
         rb.angularVelocity += new Vector3(0, moveInput.x * angularAccel, 0);
 
         //print(rb.linearVelocity.magnitude);
@@ -102,6 +121,29 @@ public class BoatController : MonoBehaviour
             canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= launchMaxSpeed;
             target.SetVisible(canLaunchMagnet);
         }
+
+        Vector2 lookInput = gameManager.InputActions.Boat.Look.ReadValue<Vector2>();
+        moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
+
+        orbitalFollow.HorizontalAxis.Center = Utils.Warp180(transform.eulerAngles.y);
+
+        recenterCameraTargetSpeed = 0;
+        if (Mathf.Abs(lookInput.x) > 0.1)
+        {
+            recenterCameraTimer = recenterCameraDelay;
+        }
+        else
+        {
+            recenterCameraTimer -= Time.deltaTime;
+
+            if (recenterCameraTimer <= 0 && moveInput.y > 0.1)
+            {
+                recenterCameraTargetSpeed = Mathf.Abs(moveInput.x) > 0.1 ? recenterCameraTurnSpeed : recenterCameraForwardSpeed;
+            }
+        }
+
+        recenterCameraSpeed = Mathf.MoveTowards(recenterCameraSpeed, recenterCameraTargetSpeed, recenterCameraAccel * Time.deltaTime);
+        orbitalFollow.HorizontalAxis.Value = Utils.Warp180(Mathf.MoveTowardsAngle(orbitalFollow.HorizontalAxis.Value - orbitalFollow.HorizontalAxis.Center, 0, recenterCameraSpeed * Time.deltaTime) + orbitalFollow.HorizontalAxis.Center);
     }
 
     private void LaunchMagnet(InputAction.CallbackContext context)
@@ -123,8 +165,6 @@ public class BoatController : MonoBehaviour
     void StartFishing()
     {
         StartCoroutine(Fishing());
-
-        //fishingHandler.StartFishing(EndFishing);
     }
 
     IEnumerator Fishing()
@@ -137,10 +177,5 @@ public class BoatController : MonoBehaviour
 
         enabled = true;
         magnetLaunched = false;
-    }
-
-    void EndFishing()
-    {
-        
     }
 }

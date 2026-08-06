@@ -465,6 +465,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GrabItemVisual"",
+                    ""type"": ""Button"",
+                    ""id"": ""07beac8c-83a8-4174-a42b-c714b551496d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateItemVisual"",
+                    ""type"": ""Value"",
+                    ""id"": ""054253b9-8723-47a2-a1be-a171a9ce8a4a"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -476,6 +494,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CloseMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc7e887b-defb-4b85-93ee-fc4f73f3ea4b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GrabItemVisual"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db58ae2e-3a8d-4ebc-aab8-ad0fb366bd65"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateItemVisual"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -565,6 +605,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_CloseMenu = m_Menu.FindAction("CloseMenu", throwIfNotFound: true);
+        m_Menu_GrabItemVisual = m_Menu.FindAction("GrabItemVisual", throwIfNotFound: true);
+        m_Menu_RotateItemVisual = m_Menu.FindAction("RotateItemVisual", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -1025,6 +1067,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Menu;
     private List<IMenuActions> m_MenuActionsCallbackInterfaces = new List<IMenuActions>();
     private readonly InputAction m_Menu_CloseMenu;
+    private readonly InputAction m_Menu_GrabItemVisual;
+    private readonly InputAction m_Menu_RotateItemVisual;
     /// <summary>
     /// Provides access to input actions defined in input action map "Menu".
     /// </summary>
@@ -1040,6 +1084,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Menu/CloseMenu".
         /// </summary>
         public InputAction @CloseMenu => m_Wrapper.m_Menu_CloseMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "Menu/GrabItemVisual".
+        /// </summary>
+        public InputAction @GrabItemVisual => m_Wrapper.m_Menu_GrabItemVisual;
+        /// <summary>
+        /// Provides access to the underlying input action "Menu/RotateItemVisual".
+        /// </summary>
+        public InputAction @RotateItemVisual => m_Wrapper.m_Menu_RotateItemVisual;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1069,6 +1121,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CloseMenu.started += instance.OnCloseMenu;
             @CloseMenu.performed += instance.OnCloseMenu;
             @CloseMenu.canceled += instance.OnCloseMenu;
+            @GrabItemVisual.started += instance.OnGrabItemVisual;
+            @GrabItemVisual.performed += instance.OnGrabItemVisual;
+            @GrabItemVisual.canceled += instance.OnGrabItemVisual;
+            @RotateItemVisual.started += instance.OnRotateItemVisual;
+            @RotateItemVisual.performed += instance.OnRotateItemVisual;
+            @RotateItemVisual.canceled += instance.OnRotateItemVisual;
         }
 
         /// <summary>
@@ -1083,6 +1141,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CloseMenu.started -= instance.OnCloseMenu;
             @CloseMenu.performed -= instance.OnCloseMenu;
             @CloseMenu.canceled -= instance.OnCloseMenu;
+            @GrabItemVisual.started -= instance.OnGrabItemVisual;
+            @GrabItemVisual.performed -= instance.OnGrabItemVisual;
+            @GrabItemVisual.canceled -= instance.OnGrabItemVisual;
+            @RotateItemVisual.started -= instance.OnRotateItemVisual;
+            @RotateItemVisual.performed -= instance.OnRotateItemVisual;
+            @RotateItemVisual.canceled -= instance.OnRotateItemVisual;
         }
 
         /// <summary>
@@ -1296,5 +1360,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCloseMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GrabItemVisual" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrabItemVisual(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotateItemVisual" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotateItemVisual(InputAction.CallbackContext context);
     }
 }
