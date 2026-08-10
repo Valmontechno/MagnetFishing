@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class Menu : MonoBehaviour
 
     [Space]
     [SerializeField] Toggle EnableScrollToggle;
+    [SerializeField] Slider mouseSensitivitySlider;
 
     [Space]
     [SerializeField] Transform itemSlotGrid;
@@ -28,17 +30,16 @@ public class Menu : MonoBehaviour
     [SerializeField] GameObject itemRecord;
     [SerializeField] TMP_InputField itemRecordNameInput;
     [SerializeField] float rotateItemVisualSpeed;
-    [SerializeField] GameObject shootingCamera;
-    GameObject shootingItem;
+    [SerializeField] ShootingCamera shootingCamera;
     public bool ItemRecordOpen { get; private set; }
     bool itemRecordPauseGame;
     ItemSlot itemSlot;
+    Vector2 rotateItemVisualVelocity;
 
 
     private void Start()
     {
         gameManager = GameManager.Instance;
-        gameManager.InputActions.Menu.Enable();
 
         gameManager.InputActions.Player.OpenMenu.performed += OpenMenu;
         gameManager.InputActions.Boat.OpenMenu.performed += OpenMenu;
@@ -57,11 +58,24 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
-        if (ItemRecordOpen && shootingItem != null && gameManager.InputActions.Menu.GrabItemVisual.ReadValue<float>() > 0)
+        if (ItemRecordOpen)
         {
-            Vector2 input = gameManager.InputActions.Menu.RotateItemVisual.ReadValue<Vector2>();
-            shootingItem.transform.Rotate(Vector3.up, -input.x * rotateItemVisualSpeed * Time.unscaledDeltaTime, Space.World);
-            shootingItem.transform.Rotate(Vector3.right, input.y * rotateItemVisualSpeed * Time.unscaledDeltaTime, Space.World);
+            if (gameManager.InputActions.Menu.GrabItemVisual.ReadValue<float>() > 0)
+            {
+                Vector2 input = gameManager.InputActions.Menu.RotateItemVisual.ReadValue<Vector2>();
+                rotateItemVisualVelocity.x = -input.x * rotateItemVisualSpeed;
+                rotateItemVisualVelocity.y = input.y * rotateItemVisualSpeed;
+            }
+            else
+            {
+                rotateItemVisualVelocity *= 0.9f;
+            }
+
+            Vector3 rotation = shootingCamera.transform.eulerAngles;
+            rotation.y -= rotateItemVisualVelocity.x * Time.unscaledDeltaTime;
+            rotation.x -= rotateItemVisualVelocity.y * Time.unscaledDeltaTime;
+            rotation.x = Mathf.Clamp(Utils.Warp180(rotation.x), -90, 90);
+            shootingCamera.transform.rotation = Quaternion.Euler(rotation);
         }
     }
 
@@ -72,6 +86,7 @@ public class Menu : MonoBehaviour
         gameManager.PauseGame();
 
         EnableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
+        mouseSensitivitySlider.value = Mathf.Log(gameManager.GameSettings.mouseSensitivity, 2);
 
         List<Item> items = gameManager.Inventory.Keys.ToList();
         items.Sort((a, b) => gameManager.Inventory[a].registrationIndex - gameManager.Inventory[b].registrationIndex);
@@ -127,6 +142,11 @@ public class Menu : MonoBehaviour
         gameManager.GameSettings.scrollEnabled = enabled;
     }
 
+    public void SetMouseSensitivity(float value)
+    {
+        gameManager.GameSettings.mouseSensitivity = Mathf.Pow(2, value);
+    }
+
     public void OpenItemRecord(Item item, bool pauseGame)
     {
         OpenItemRecord(item, pauseGame, gameManager.Inventory[item]);
@@ -145,13 +165,7 @@ public class Menu : MonoBehaviour
         if (itemSlot.userName == "")
             itemRecordNameInput.Select();
 
-        shootingCamera.SetActive(true);
-        if (item.visual != null)
-        {
-            shootingItem = Instantiate(item.visual);
-            shootingItem.layer = LayerMask.NameToLayer("ItemShooting");
-            shootingItem.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-        }
+        shootingCamera.StartShooting(item);
     }
 
     public void CloseItemRecord()
@@ -161,9 +175,7 @@ public class Menu : MonoBehaviour
         if (itemRecordPauseGame) gameManager.UnpauseGame();
         itemRecord.SetActive(false);
 
-        shootingCamera.SetActive(false);
-        if (shootingItem != null)
-            Destroy(shootingItem);
+        shootingCamera.EndShooting();
     }
 
     public void SetItemRecordName(string name)

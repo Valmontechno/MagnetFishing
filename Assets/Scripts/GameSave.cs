@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameSettings
 {
     public bool scrollEnabled = false;
+    public float mouseSensitivity = 1;
 }
 
 public class GameSave

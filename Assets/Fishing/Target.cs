@@ -4,6 +4,11 @@ public class Target : MonoBehaviour
 {
     int collisionCount;
 
+    private void Awake()
+    {
+        SetVisible(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.isTrigger)

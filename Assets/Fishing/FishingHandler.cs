@@ -90,12 +90,20 @@ public class FishingHandler : MonoBehaviour
 
             submergedItem = gameManager.overlappedSubmergedItem;
 
-            if (submergedItem.item.obstacle != null)
-                obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
+            if (submergedItem != null)
+            {
+                if (submergedItem.item.obstacle != null)
+                    obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
 
+                fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
+                magnet2D.StartFishing(submergedItem.item.masse);
+            }
+            else
+            {
+                fishingFloat.factor = 1 / MagnetController.refMasse;
+                magnet2D.StartFishing(1);
+            }
             fishingFloat.gameObject.SetActive(true);
-            fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
-            magnet2D.StartFishing(submergedItem.item.masse);
         }
 
         while (magnet2D.CurrentState == MagnetController.State.Fishing) { yield return null; }
@@ -113,14 +121,22 @@ public class FishingHandler : MonoBehaviour
 
             if (magnet2D.CurrentState == MagnetController.State.Success)
             {
-                submergedItem.Remove();
+                Item item = null;
+                if (submergedItem != null)
+                {
+                    item = submergedItem.item;
+                    submergedItem.Remove();
+                }
 
                 yield return new WaitForSeconds(1);
 
-                ItemSlot itemSlot = new(gameManager.Inventory.Count);
-                //menu.OpenItemRecord(submergedItem.item, true, itemSlot);
-                //while (menu.ItemRecordOpen) { yield return null; }
-                gameManager.Inventory[submergedItem.item] = itemSlot;
+                if (item != null)
+                {
+                    ItemSlot itemSlot = new(gameManager.Inventory.Count);
+                    menu.OpenItemRecord(item, true, itemSlot);
+                    while (menu.ItemRecordOpen) { yield return null; }
+                    gameManager.Inventory[item] = itemSlot;
+                }
             }
         }
     }
@@ -132,6 +148,11 @@ public class FishingHandler : MonoBehaviour
 
     public bool CanFish()
     {
-        return collisionCount == 0 && GameManager.Instance.overlappedSubmergedItem != null;
+        return CanLaunch() && GameManager.Instance.overlappedSubmergedItem != null;
+    }
+
+    public bool CanLaunch()
+    {
+        return collisionCount == 0;
     }
 }

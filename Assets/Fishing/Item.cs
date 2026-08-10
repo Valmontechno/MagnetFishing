@@ -12,13 +12,21 @@ public class Item : ScriptableObject
     public GameObject obstacle;
     public float masse = 1;
 
+
+    public Vector3 GetScale()
+    {
+        MeshRenderer mr = visual.GetComponentInChildren<MeshRenderer>();
+        return Vector3.one / mr.bounds.size.magnitude * 10;
+    }
+
     void GenerateIcon()
     {
 #if UNITY_EDITOR
         const int size = 128;
-        string path = "/Fishing/Item Visuals/Icons/" + name + ".png";
+        string path = "/Fishing/Items/Icons/" + name + ".png";
 
-        Camera camera = GameObject.Find("Shooting Camera").GetComponent<Camera>();
+        ShootingCamera shootingCamera = FindAnyObjectByType<ShootingCamera>(FindObjectsInactive.Include);
+        Camera camera = shootingCamera.GetComponentInChildren<Camera>(true);
 
         RenderTexture defaultRT = camera.targetTexture;
 
@@ -32,13 +40,11 @@ public class Item : ScriptableObject
         RenderTexture previous = RenderTexture.active;
         RenderTexture.active = rt;
 
-        GameObject shootingItem = Instantiate(visual);
-        shootingItem.layer = LayerMask.NameToLayer("ItemShooting");
-        shootingItem.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+        shootingCamera.StartShooting(this);
 
         camera.Render();
 
-        DestroyImmediate(shootingItem);
+        shootingCamera.EndShooting();
 
         Texture2D tex = new(size, size, TextureFormat.RGBA32, false);
         tex.ReadPixels(new Rect(0, 0, size, size), 0, 0);

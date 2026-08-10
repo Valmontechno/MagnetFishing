@@ -92,8 +92,9 @@ public class MagnetController : MonoBehaviour
     {
         mouseInput = Vector2.ClampMagnitude(mouseInput, maxMouseMove);
 
-        Vector2 pos2start = (Vector2)startPoint.position - (Vector2)transform.position;
-        bool isGrounded = pos2start.magnitude <= startRadius;
+        //Vector2 pos2start = (Vector2)startPoint.position - (Vector2)transform.position;
+        //bool isGrounded = pos2start.magnitude <= startRadius;
+        bool isGrounded = transform.position.y >= startPoint.position.y - startRadius;
 
         Vector2 velocity = Vector2.zero;
 
@@ -106,7 +107,9 @@ public class MagnetController : MonoBehaviour
         }
 
         if (!isGrounded)
-            velocity += gravity * (holding ? 1 : releaseFactor) * masse * pos2start.normalized;
+        {
+            velocity.y += gravity * (holding ? 1 : releaseFactor) * masse;
+        }
 
         rb.linearVelocity = velocity;
 

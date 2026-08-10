@@ -97,7 +97,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""1ee527f5-0239-4042-bff8-633394575687"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""MouseSensitivity"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -223,9 +223,36 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""e9e5dcd5-f067-49f5-a336-926bfcc34c2a"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""MouseSensitivity"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""OpenMenu"",
                     ""type"": ""Button"",
                     ""id"": ""a0b91e61-8866-4978-88dc-452aa83c1f62"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""180276b8-3a90-4c1f-bb5f-da748f0414e5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LaunchMagnet"",
+                    ""type"": ""Button"",
+                    ""id"": ""1a9b021e-fa08-4d9a-94ce-6e1175b769dc"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -290,12 +317,45 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""7ed66237-deb7-4576-bcf3-a425a2fd0cdf"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LaunchMagnet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5e4fb0d9-0346-4e0a-acde-ee06ab2e5f18"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""10d047fc-4c5f-4058-86cd-ec238c6b9b0b"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1fe92cf0-7658-4ffe-adbf-8a5d2aab48b7"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -319,18 +379,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""ca76e163-a2a4-4c1f-97f8-9c255c4b6753"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""MouseSensitivity"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""StartFishing"",
-                    ""type"": ""Button"",
-                    ""id"": ""1239969d-e612-4e4f-bd03-9cd1576d1b82"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""LaunchMagnet"",
@@ -345,6 +396,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""OpenMenu"",
                     ""type"": ""Button"",
                     ""id"": ""4b9251e6-f2f8-41b7-80f9-bf612770b273"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitBoat"",
+                    ""type"": ""Button"",
+                    ""id"": ""d560cd22-72bd-4d12-8c92-c053ce04ac2c"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -420,17 +480,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""418a7d40-f73e-48b7-beeb-6244e4d0754b"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StartFishing"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""df5137c3-f504-4ea8-94a9-883bf4d7c4bd"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -448,6 +497,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea76b7c7-b030-4bf3-ad9c-83ad643860eb"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitBoat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -594,14 +654,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_OpenMenu = m_Player.FindAction("OpenMenu", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_LaunchMagnet = m_Player.FindAction("LaunchMagnet", throwIfNotFound: true);
         // Boat
         m_Boat = asset.FindActionMap("Boat", throwIfNotFound: true);
         m_Boat_Move = m_Boat.FindAction("Move", throwIfNotFound: true);
         m_Boat_Look = m_Boat.FindAction("Look", throwIfNotFound: true);
-        m_Boat_StartFishing = m_Boat.FindAction("StartFishing", throwIfNotFound: true);
         m_Boat_LaunchMagnet = m_Boat.FindAction("LaunchMagnet", throwIfNotFound: true);
         m_Boat_OpenMenu = m_Boat.FindAction("OpenMenu", throwIfNotFound: true);
+        m_Boat_ExitBoat = m_Boat.FindAction("ExitBoat", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_CloseMenu = m_Menu.FindAction("CloseMenu", throwIfNotFound: true);
@@ -820,7 +883,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_OpenMenu;
+    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_LaunchMagnet;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -837,9 +903,21 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Player_Move;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Look".
+        /// </summary>
+        public InputAction @Look => m_Wrapper.m_Player_Look;
+        /// <summary>
         /// Provides access to the underlying input action "Player/OpenMenu".
         /// </summary>
         public InputAction @OpenMenu => m_Wrapper.m_Player_OpenMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/LaunchMagnet".
+        /// </summary>
+        public InputAction @LaunchMagnet => m_Wrapper.m_Player_LaunchMagnet;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -869,9 +947,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
             @OpenMenu.started += instance.OnOpenMenu;
             @OpenMenu.performed += instance.OnOpenMenu;
             @OpenMenu.canceled += instance.OnOpenMenu;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @LaunchMagnet.started += instance.OnLaunchMagnet;
+            @LaunchMagnet.performed += instance.OnLaunchMagnet;
+            @LaunchMagnet.canceled += instance.OnLaunchMagnet;
         }
 
         /// <summary>
@@ -886,9 +973,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
             @OpenMenu.started -= instance.OnOpenMenu;
             @OpenMenu.performed -= instance.OnOpenMenu;
             @OpenMenu.canceled -= instance.OnOpenMenu;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @LaunchMagnet.started -= instance.OnLaunchMagnet;
+            @LaunchMagnet.performed -= instance.OnLaunchMagnet;
+            @LaunchMagnet.canceled -= instance.OnLaunchMagnet;
         }
 
         /// <summary>
@@ -928,9 +1024,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private List<IBoatActions> m_BoatActionsCallbackInterfaces = new List<IBoatActions>();
     private readonly InputAction m_Boat_Move;
     private readonly InputAction m_Boat_Look;
-    private readonly InputAction m_Boat_StartFishing;
     private readonly InputAction m_Boat_LaunchMagnet;
     private readonly InputAction m_Boat_OpenMenu;
+    private readonly InputAction m_Boat_ExitBoat;
     /// <summary>
     /// Provides access to input actions defined in input action map "Boat".
     /// </summary>
@@ -951,10 +1047,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Look => m_Wrapper.m_Boat_Look;
         /// <summary>
-        /// Provides access to the underlying input action "Boat/StartFishing".
-        /// </summary>
-        public InputAction @StartFishing => m_Wrapper.m_Boat_StartFishing;
-        /// <summary>
         /// Provides access to the underlying input action "Boat/LaunchMagnet".
         /// </summary>
         public InputAction @LaunchMagnet => m_Wrapper.m_Boat_LaunchMagnet;
@@ -962,6 +1054,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Boat/OpenMenu".
         /// </summary>
         public InputAction @OpenMenu => m_Wrapper.m_Boat_OpenMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "Boat/ExitBoat".
+        /// </summary>
+        public InputAction @ExitBoat => m_Wrapper.m_Boat_ExitBoat;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -994,15 +1090,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @StartFishing.started += instance.OnStartFishing;
-            @StartFishing.performed += instance.OnStartFishing;
-            @StartFishing.canceled += instance.OnStartFishing;
             @LaunchMagnet.started += instance.OnLaunchMagnet;
             @LaunchMagnet.performed += instance.OnLaunchMagnet;
             @LaunchMagnet.canceled += instance.OnLaunchMagnet;
             @OpenMenu.started += instance.OnOpenMenu;
             @OpenMenu.performed += instance.OnOpenMenu;
             @OpenMenu.canceled += instance.OnOpenMenu;
+            @ExitBoat.started += instance.OnExitBoat;
+            @ExitBoat.performed += instance.OnExitBoat;
+            @ExitBoat.canceled += instance.OnExitBoat;
         }
 
         /// <summary>
@@ -1020,15 +1116,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @StartFishing.started -= instance.OnStartFishing;
-            @StartFishing.performed -= instance.OnStartFishing;
-            @StartFishing.canceled -= instance.OnStartFishing;
             @LaunchMagnet.started -= instance.OnLaunchMagnet;
             @LaunchMagnet.performed -= instance.OnLaunchMagnet;
             @LaunchMagnet.canceled -= instance.OnLaunchMagnet;
             @OpenMenu.started -= instance.OnOpenMenu;
             @OpenMenu.performed -= instance.OnOpenMenu;
             @OpenMenu.canceled -= instance.OnOpenMenu;
+            @ExitBoat.started -= instance.OnExitBoat;
+            @ExitBoat.performed -= instance.OnExitBoat;
+            @ExitBoat.canceled -= instance.OnExitBoat;
         }
 
         /// <summary>
@@ -1296,12 +1392,33 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLook(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "OpenMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnOpenMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LaunchMagnet" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLaunchMagnet(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Boat" which allows adding and removing callbacks.
@@ -1325,13 +1442,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "StartFishing" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStartFishing(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "LaunchMagnet" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1345,6 +1455,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnOpenMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ExitBoat" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnExitBoat(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Menu" which allows adding and removing callbacks.

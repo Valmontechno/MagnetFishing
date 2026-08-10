@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Tuto 1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   icon: {fileID: 21300000, guid: c112af832202e36458d594e195b802a6, type: 3}
-  visual: {fileID: 919132149155446097, guid: 58f6820c9ae25f34894e8eec03518402, type: 3}
+  visual: {fileID: 919132149155446097, guid: 0e7ae33ce43c8b148a0e8bd9cb4fee33, type: 3}
   obstacle: {fileID: 1924442096230353166, guid: 94f1a8e755103af4bb7ad9cd345e7812, type: 3}
   masse: 1

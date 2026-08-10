@@ -16,6 +16,7 @@ public class BoatController : MonoBehaviour
     [SerializeField] Transform fishingPivot;
     [SerializeField] GameObject fishingFloat;
     [SerializeField] Target target;
+    [SerializeField] HUD hud;
 
     [Space]
     [SerializeField] float accel;
@@ -31,44 +32,56 @@ public class BoatController : MonoBehaviour
     float recenterCameraTimer = 0;
 
     [Space]
-    [SerializeField] float launchMaxSpeed;
+    [SerializeField] float interactionMaxSpeed;
+    [SerializeField] float exitSlopLimit;
+    [SerializeField] LayerMask checkGroundLayer;
+    [SerializeField] Transform checkGroundRayOrigin;
+    [SerializeField] float checkGroundDistance;
+    [SerializeField] string exitMessage;
+
+    [Space]
     [SerializeField] float floatMaxDistance;
     [SerializeField] float floatMinDistance;
     bool canLaunchMagnet = false;
     bool magnetLaunched = false;
     Vector2 relativeFloatPos;
 
-    Vector2 moveInput;
+    Vector2 moveInput, lookInput;
+
+    readonly Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.right, Vector3.left };
+    bool canExitBoat = false;
+    Vector3 exitPosition;
 
     private void Awake()
     {
         gameManager = GameManager.Instance;
         rb = GetComponent<Rigidbody>();
         orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
-        fishingHandler = GetComponentInChildren<FishingHandler>(true);
+        fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>(true);
 
         gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
-
-        ResetCamera();
+        gameManager.InputActions.Boat.ExitBoat.performed += ExitBoat;
     }
 
     private void OnDestroy()
     {
         gameManager.InputActions.Boat.LaunchMagnet.performed -= LaunchMagnet;
+        gameManager.InputActions.Boat.ExitBoat.performed -= ExitBoat;
     }
 
     private void OnEnable()
     {
         gameManager.InputActions.Boat.Enable();
-        camera.SetActive(true);
 
         orbitalFollow.VerticalAxis.Value = orbitalFollow.VerticalAxis.Center;
+        target.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
         gameManager.InputActions.Boat.Disable();
-        //camera.SetActive(false);
+
+        target.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()
@@ -94,17 +107,32 @@ public class BoatController : MonoBehaviour
         {
             StartFishing();
         }
+
+        canExitBoat = CheckCanExit();
+        if (canExitBoat)
+            hud.ShowInteractionTooltip(exitMessage);
+        else
+            hud.HideInteractionTooltip();
     }
 
     void Navigate()
     {
         rb.linearVelocity += moveInput.y * accel * transform.forward;
-        rb.angularVelocity += new Vector3(0, moveInput.x * angularAccel, 0);
+        rb.angularVelocity += new Vector3(0, moveInput.x * angularAccel * (moveInput.y >= 0 ? 1 : -1), 0);
 
         //print(rb.linearVelocity.magnitude);
     }
 
     private void Update()
+    {
+        moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
+        lookInput = gameManager.InputActions.Boat.Look.ReadValue<Vector2>();
+
+        UpdateFishing();
+        Look();
+    }
+
+    void UpdateFishing()
     {
         if (magnetLaunched)
         {
@@ -118,13 +146,13 @@ public class BoatController : MonoBehaviour
         {
             fishingPivot.rotation = Quaternion.Euler(0, camera.transform.rotation.eulerAngles.y, 0);
 
-            canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= launchMaxSpeed;
+            canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= interactionMaxSpeed;
             target.SetVisible(canLaunchMagnet);
         }
+    }
 
-        Vector2 lookInput = gameManager.InputActions.Boat.Look.ReadValue<Vector2>();
-        moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
-
+    void Look()
+    {
         orbitalFollow.HorizontalAxis.Center = Utils.Warp180(transform.eulerAngles.y);
 
         recenterCameraTargetSpeed = 0;
@@ -144,6 +172,25 @@ public class BoatController : MonoBehaviour
 
         recenterCameraSpeed = Mathf.MoveTowards(recenterCameraSpeed, recenterCameraTargetSpeed, recenterCameraAccel * Time.deltaTime);
         orbitalFollow.HorizontalAxis.Value = Utils.Warp180(Mathf.MoveTowardsAngle(orbitalFollow.HorizontalAxis.Value - orbitalFollow.HorizontalAxis.Center, 0, recenterCameraSpeed * Time.deltaTime) + orbitalFollow.HorizontalAxis.Center);
+    }
+
+    bool CheckCanExit()
+    {
+        if (rb.linearVelocity.magnitude > interactionMaxSpeed) return false;
+
+        foreach (Vector3 direction in directions)
+        {
+            if (Physics.Raycast(checkGroundRayOrigin.position, transform.TransformDirection(direction), out RaycastHit hit, checkGroundDistance, checkGroundLayer))
+            {
+                if (Vector3.Angle(Vector3.up, hit.normal) <= exitSlopLimit)
+                {
+                    exitPosition = hit.point;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void LaunchMagnet(InputAction.CallbackContext context)
@@ -177,5 +224,24 @@ public class BoatController : MonoBehaviour
 
         enabled = true;
         magnetLaunched = false;
+    }
+
+    public void EnterBoat()
+    {
+        enabled = true;
+        camera.SetActive(true);
+        ResetCamera();
+        gameManager.player.EnterBoat();
+        hud.HideInteractionTooltip();
+    }
+
+    private void ExitBoat(InputAction.CallbackContext context)
+    {
+        if (!canExitBoat) return;
+
+        enabled = false;
+        camera.SetActive(false);
+        gameManager.player.ExitBoat(exitPosition);
+        hud.HideInteractionTooltip();
     }
 }

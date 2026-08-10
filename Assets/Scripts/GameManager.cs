@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +9,22 @@ public class GameManager : MonoBehaviour
     public InputActions InputActions {get; private set;}
 
     [HideInInspector] public Sea sea;
+    [HideInInspector] public PlayerController player;
 
     [HideInInspector] public SubmergedItem overlappedSubmergedItem = null;
+
+    InteractiveObject interactiveObject;
+    public InteractiveObject InteractiveObject
+    {
+        get => interactiveObject;
+        set
+        {
+            interactiveObject = value;
+            OnInteractiveObjectChange?.Invoke();
+        }
+    }
+
+    public event Action OnInteractiveObjectChange;
 
     public Dictionary<Item, ItemSlot> Inventory { get; private set; }
     public GameSettings GameSettings { get; private set; }
@@ -64,6 +79,8 @@ public class GameManager : MonoBehaviour
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        InputActions.Menu.Enable();
     }
 
     public void UnpauseGame()
@@ -76,6 +93,8 @@ public class GameManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        InputActions.Menu.Disable();
     }
 
     public void ApplySettings()
