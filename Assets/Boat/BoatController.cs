@@ -36,6 +36,7 @@ public class BoatController : MonoBehaviour
     [SerializeField] float exitSlopLimit;
     [SerializeField] LayerMask checkGroundLayer;
     [SerializeField] Transform checkGroundRayOrigin;
+    [SerializeField] float checkGroundOffset;
     [SerializeField] float checkGroundDistance;
     [SerializeField] string exitMessage;
 
@@ -180,7 +181,7 @@ public class BoatController : MonoBehaviour
 
         foreach (Vector3 direction in directions)
         {
-            if (Physics.Raycast(checkGroundRayOrigin.position, transform.TransformDirection(direction), out RaycastHit hit, checkGroundDistance, checkGroundLayer))
+            if (Physics.Raycast(checkGroundRayOrigin.position + transform.TransformDirection(direction) * checkGroundOffset + Vector3.up * 3, Vector3.down, out RaycastHit hit, 10, checkGroundLayer))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) <= exitSlopLimit)
                 {

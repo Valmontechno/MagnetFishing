@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,7 +13,8 @@ public class PlayerController : MonoBehaviour
     FishingHandler fishingHandler;
 
     [Space]
-    [SerializeField] new Transform camera;
+    [SerializeField] new CinemachineOrbitalFollow camera;
+    [SerializeField] GameObject drowningCamera;
     [SerializeField] GameObject visual;
     [SerializeField] Transform fishingPivot;
     [SerializeField] Target target;
@@ -24,6 +27,10 @@ public class PlayerController : MonoBehaviour
 
     Vector2 horizontalVelocity;
     float verticalVelocity;
+    public Vector3 Velocity => new(horizontalVelocity.x, verticalVelocity, horizontalVelocity.y);
+
+    bool drowning = false;
+    Vector3 lastSecurePosition;
 
     bool canLaunchMagnet = false;
 
@@ -59,6 +66,14 @@ public class PlayerController : MonoBehaviour
         target.gameObject.SetActive(false);
     }
 
+    void Teleport(Vector3 position)
+    {
+        bool chEnabled = characterController.enabled;
+        characterController.enabled = false;
+        transform.position = position;
+        characterController.enabled = chEnabled;
+    }
+
     private void Update()
     {
         Move();
@@ -70,8 +85,8 @@ public class PlayerController : MonoBehaviour
         Vector2 moveInput = gameManager.InputActions.Player.Move.ReadValue<Vector2>();
         moveInput = Vector2.ClampMagnitude(moveInput, 1);
 
-        Vector3 forward = camera.forward;
-        Vector3 right = camera.right;
+        Vector3 forward = camera.transform.forward;
+        Vector3 right = camera.transform.right;
         forward.y = 0f;
         right.y = 0f;
         forward.Normalize();
@@ -95,14 +110,57 @@ public class PlayerController : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
 
         characterController.Move((verticalVelocity * Vector3.up + horizontalVelocity.x * right + horizontalVelocity.y * forward) * Time.deltaTime);
+
+        if (drowning)
+        {
+            Vector3 pos = transform.position;
+            pos.y = Math.Max(pos.y, -3);
+            Teleport(pos);
+        }
     }
 
     void UpdateFishing()
     {
-        fishingPivot.SetPositionAndRotation(Utils.SetY(fishingPivot.position, 0), Quaternion.Euler(0, camera.eulerAngles.y, 0));
+        fishingPivot.SetPositionAndRotation(Utils.SetY(fishingPivot.position, 0), Quaternion.Euler(0, camera.transform.eulerAngles.y, 0));
 
         canLaunchMagnet = fishingHandler.CanLaunch();
         target.SetVisible(canLaunchMagnet);
+    }
+
+    private void FixedUpdate()
+    {
+        if (drowning) return; 
+
+        if (transform.position.y < 0)
+        {
+            StartCoroutine(Drowning());
+        }
+        else if (characterController.isGrounded)
+        {
+            lastSecurePosition = transform.position;
+        }
+    }
+
+    IEnumerator Drowning()
+    {
+        drowning = true;
+
+        gameManager.InputActions.Player.Disable();
+        camera.enabled = false;
+
+        gameManager.sea.GenerateRipple(Utils.XZ(transform.position), 1.25f);
+
+        yield return new WaitForSeconds(2);
+
+        gameManager.InputActions.Player.Enable();
+        camera.enabled = true;
+
+        Teleport(lastSecurePosition);
+
+        horizontalVelocity = Vector2.zero;
+        verticalVelocity = 0;
+
+        drowning = false;
     }
 
     private void Interact(InputAction.CallbackContext context)
@@ -124,9 +182,7 @@ public class PlayerController : MonoBehaviour
         enabled = true;
         visual.SetActive(true);
 
-        characterController.enabled = false;
-        transform.position = position;
-        characterController.enabled = true;
+        Teleport(position);
     }
 
     private void LaunchMagnet(InputAction.CallbackContext context)

@@ -18,6 +18,7 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] new GameObject camera;
     [SerializeField] RippleGenerator fishingFloat;
     [SerializeField] Menu menu;
+    [SerializeField] HUD hud;
 
     int collisionCount = 0;
 
@@ -39,7 +40,7 @@ public class FishingHandler : MonoBehaviour
         return transform.TransformPoint(ToLocal3D(pos, y));
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (frame2D != null)
         {
@@ -53,7 +54,7 @@ public class FishingHandler : MonoBehaviour
 
             BoxCollider collider = GetComponent<BoxCollider>();
             collider.center = ToLocal3D(frame2D.offset);
-            collider.size = ToLocal3D(frame2D.size, 1);
+            collider.size = ToLocal3D(frame2D.size, 3);
         }
 
         if (target != null && magnet2D != null)
@@ -85,6 +86,7 @@ public class FishingHandler : MonoBehaviour
             enabled = true;
             camera.SetActive(true);
             magnet2D.ResetPosition();
+            hud.HideInteractionTooltip();
 
             yield return new WaitForSeconds(2);
 
