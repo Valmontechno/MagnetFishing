@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 904408484572095903}
   - component: {fileID: 6149623520292477551}
   - component: {fileID: 1285529930382113041}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: BOAT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,6 +70,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 39
   checkGroundRayOrigin: {fileID: 3194420348319601368}
+  checkGroundOffset: 3
   checkGroundDistance: 6
   exitMessage: "D\xE9barquer"
   floatMaxDistance: 18.2
@@ -205,7 +206,7 @@ GameObject:
   - component: {fileID: 483137951884140333}
   - component: {fileID: 1008764141276808363}
   - component: {fileID: 7781887204432446027}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Boat Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -423,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2362379222048202218}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fishing Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6706943833846798905}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Camera Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3194420348319601368}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cehck GroundRay Origin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -517,9 +518,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2362379222048202218}
     m_Modifications:
+    - target: {fileID: 231691135741628562, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 7.375
+      objectReference: {fileID: 0}
     - target: {fileID: 2547009318041027133, guid: 00ed565386b93034da5252d1e440385b, type: 3}
       propertyPath: m_Name
       value: Fishing
+      objectReference: {fileID: 0}
+    - target: {fileID: 2547009318041027133, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3629582246747548033, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4196996215236811979, guid: 00ed565386b93034da5252d1e440385b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -560,6 +573,18 @@ PrefabInstance:
     - target: {fileID: 4196996215236811979, guid: 00ed565386b93034da5252d1e440385b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7432155053128426821, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7465311484870605314, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621503854392840887, guid: 00ed565386b93034da5252d1e440385b, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -646,9 +671,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -333963207203876991, guid: 0f8600bb3a3a56a46ba9317d9292f671, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0f8600bb3a3a56a46ba9317d9292f671, type: 3}
       propertyPath: m_Name
       value: boat-row-large
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0f8600bb3a3a56a46ba9317d9292f671, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
