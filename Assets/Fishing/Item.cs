@@ -8,9 +8,11 @@ public class Item : ScriptableObject
     public Sprite icon;
 
     [Space]
+    public string itemName;
     public GameObject visual;
     public GameObject obstacle;
     public float masse = 1;
+    public int gramMasse;
 
 
     public Vector3 GetScale()

@@ -13,7 +13,7 @@ public class Menu : MonoBehaviour
 
     [Header("Menu")]
     [SerializeField] GameObject menu;
-    bool menuOpen = false;
+    public bool IsMenuOpen { get; private set; }
     [Serializable] struct Tab { public Button button; public GameObject content; }
     [SerializeField] Tab[] tabs;
 
@@ -26,27 +26,27 @@ public class Menu : MonoBehaviour
     [SerializeField] GameObject itemSlotButtonPrefab;
 
 
-    [Header("Item Record")]
-    [SerializeField] GameObject itemRecord;
-    [SerializeField] TMP_InputField itemRecordNameInput;
-    [SerializeField] float rotateItemVisualSpeed;
-    [SerializeField] ShootingCamera shootingCamera;
-    public bool ItemRecordOpen { get; private set; }
-    bool itemRecordPauseGame;
-    ItemSlot itemSlot;
-    Vector2 rotateItemVisualVelocity;
+    [Header("Modals")]
+    public ItemRecordModal itemRecordModal;
+    public Modal bikeQuestModal;
 
+
+    private void Awake()
+    {
+        gameManager = GameManager.Instance;
+        gameManager.menu = this;
+
+        IsMenuOpen = false;
+    }
 
     private void Start()
     {
-        gameManager = GameManager.Instance;
-
         gameManager.InputActions.Player.OpenMenu.performed += OpenMenu;
         gameManager.InputActions.Boat.OpenMenu.performed += OpenMenu;
         gameManager.InputActions.Menu.CloseMenu.performed += CloseMenu;
 
         menu.SetActive(false);
-        itemRecord.SetActive(false);
+        itemRecordModal.CloseModal();
     }
 
     private void OnDestroy()
@@ -58,32 +58,33 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
-        if (ItemRecordOpen)
-        {
-            if (gameManager.InputActions.Menu.GrabItemVisual.ReadValue<float>() > 0)
-            {
-                Vector2 input = gameManager.InputActions.Menu.RotateItemVisual.ReadValue<Vector2>();
-                rotateItemVisualVelocity.x = -input.x * rotateItemVisualSpeed;
-                rotateItemVisualVelocity.y = input.y * rotateItemVisualSpeed;
-            }
-            else
-            {
-                rotateItemVisualVelocity *= 0.9f;
-            }
+        //if (itemRecordModal.IsOpen)
+        //{
+        //    if (gameManager.InputActions.Menu.GrabItemVisual.ReadValue<float>() > 0)
+        //    {
+        //        Vector2 input = gameManager.InputActions.Menu.RotateItemVisual.ReadValue<Vector2>();
+        //        rotateItemVisualVelocity.x = -input.x * rotateItemVisualSpeed;
+        //        rotateItemVisualVelocity.y = input.y * rotateItemVisualSpeed;
+        //    }
+        //    else
+        //    {
+        //        rotateItemVisualVelocity *= 0.9f;
+        //    }
 
-            Vector3 rotation = shootingCamera.transform.eulerAngles;
-            rotation.y -= rotateItemVisualVelocity.x * Time.unscaledDeltaTime;
-            rotation.x -= rotateItemVisualVelocity.y * Time.unscaledDeltaTime;
-            rotation.x = Mathf.Clamp(Utils.Warp180(rotation.x), -90, 90);
-            shootingCamera.transform.rotation = Quaternion.Euler(rotation);
-        }
+        //    Vector3 rotation = shootingCamera.transform.eulerAngles;
+        //    rotation.y -= rotateItemVisualVelocity.x * Time.unscaledDeltaTime;
+        //    rotation.x -= rotateItemVisualVelocity.y * Time.unscaledDeltaTime;
+        //    rotation.x = Mathf.Clamp(Utils.Warp180(rotation.x), -90, 90);
+        //    shootingCamera.transform.rotation = Quaternion.Euler(rotation);
+        //}
     }
 
     private void OpenMenu(InputAction.CallbackContext context)
     {
-        menuOpen = true;
+        IsMenuOpen = true;
         menu.SetActive(true);
         gameManager.PauseGame();
+        gameManager.ShowMouse();
 
         EnableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
         mouseSensitivitySlider.value = Mathf.Log(gameManager.GameSettings.mouseSensitivity, 2);
@@ -99,7 +100,7 @@ public class Menu : MonoBehaviour
 
     private void CloseMenu(InputAction.CallbackContext context)
     {
-        if (menuOpen)
+        if (IsMenuOpen)
         {
             Resume();
         }
@@ -107,13 +108,15 @@ public class Menu : MonoBehaviour
 
     public void Resume()
     {
-        menuOpen = false;
+        IsMenuOpen = false;
         menu.SetActive(false);
         gameManager.ApplySettings();
         gameManager.UnpauseGame();
+        gameManager.HideMouse();
 
-        if (ItemRecordOpen)
-            CloseItemRecord();
+        if (itemRecordModal.IsOpen)
+            itemRecordModal.CloseModal();
+            //CloseItemRecord();
 
         while (itemSlotGrid.childCount > 0)
             DestroyImmediate(itemSlotGrid.GetChild(0).gameObject);
@@ -147,39 +150,33 @@ public class Menu : MonoBehaviour
         gameManager.GameSettings.mouseSensitivity = Mathf.Pow(2, value);
     }
 
-    public void OpenItemRecord(Item item, bool pauseGame)
-    {
-        OpenItemRecord(item, pauseGame, gameManager.Inventory[item]);
-    }
+    //public void OpenItemRecord(Item item, bool pauseGame)
+    //{
+    //    OpenItemRecord(item, pauseGame, gameManager.Inventory[item]);
+    //}
 
-    public void OpenItemRecord(Item item, bool pauseGame, ItemSlot itemSlot)
-    {
-        this.itemSlot = itemSlot;
-        ItemRecordOpen = true;
-        itemRecordPauseGame = pauseGame;
+    //public void OpenItemRecord(Item item, bool pauseGame, ItemSlot itemSlot)
+    //{
+    //    this.itemSlot = itemSlot;
 
-        if (pauseGame) gameManager.PauseGame();
-        itemRecord.SetActive(true);
+    //    itemRecordModal.OpenModal(pauseGame);
 
-        itemRecordNameInput.text = itemSlot.userName;
-        if (itemSlot.userName == "")
-            itemRecordNameInput.Select();
+    //    itemRecordNameInput.text = itemSlot.userName;
+    //    if (itemSlot.userName == "")
+    //        itemRecordNameInput.Select();
 
-        shootingCamera.StartShooting(item);
-    }
+    //    shootingCamera.StartShooting(item);
+    //}
 
-    public void CloseItemRecord()
-    {
-        ItemRecordOpen = false;
+    //public void CloseItemRecord()
+    //{
+    //    itemRecordModal.CloseModal();
 
-        if (itemRecordPauseGame) gameManager.UnpauseGame();
-        itemRecord.SetActive(false);
+    //    shootingCamera.EndShooting();
+    //}
 
-        shootingCamera.EndShooting();
-    }
-
-    public void SetItemRecordName(string name)
-    {
-        itemSlot.userName = name;
-    }
+    //public void SetItemRecordName(string name)
+    //{
+    //    itemSlot.userName = name;
+    //}
 }

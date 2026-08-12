@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class FishingHandler : MonoBehaviour
@@ -134,10 +135,20 @@ public class FishingHandler : MonoBehaviour
 
                 if (item != null)
                 {
+                    gameManager.ShowMouse();
+
                     ItemSlot itemSlot = new(gameManager.Inventory.Count);
-                    menu.OpenItemRecord(item, true, itemSlot);
-                    while (menu.ItemRecordOpen) { yield return null; }
+                    menu.itemRecordModal.OpenModal(item, itemSlot);
+                    while (menu.itemRecordModal.IsOpen) { yield return null; }
                     gameManager.Inventory[item] = itemSlot;
+
+                    if (gameManager.bikeItems.Contains(item))
+                    {
+                        menu.bikeQuestModal.OpenModal();
+                        while (menu.bikeQuestModal.IsOpen) { yield return null; }
+                    }
+
+                    gameManager.HideMouse();
                 }
             }
         }

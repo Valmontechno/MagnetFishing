@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class SubmergedItem : MonoBehaviour
@@ -8,6 +9,24 @@ public class SubmergedItem : MonoBehaviour
         if (TryGetComponent(out Collider collider))
         {
             collider.isTrigger = true;
+        }
+
+        if (item != null)
+        {
+            var iconContent = EditorGUIUtility.IconContent("sv_label_1");
+            EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
+            gameObject.name = item.name;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.matrix = transform.localToWorldMatrix;
+
+        if (TryGetComponent(out BoxCollider box))
+        {
+            Gizmos.DrawWireCube(box.center, box.size);
         }
     }
 

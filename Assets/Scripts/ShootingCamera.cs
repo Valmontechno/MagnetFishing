@@ -18,7 +18,7 @@ public class ShootingCamera : MonoBehaviour
             transform.rotation = defaultRotation;
 
             itemGO = Instantiate(item.visual);
-            itemGO.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            itemGO.transform.position = Vector3.zero;
             itemGO.transform.localScale = item.GetScale();
 
             foreach (Renderer renderer in itemGO.GetComponentsInChildren<Renderer>())

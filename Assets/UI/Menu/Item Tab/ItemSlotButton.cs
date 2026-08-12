@@ -18,6 +18,6 @@ public class ItemSlotButton : MonoBehaviour
 
     public void OnClick()
     {
-        menu.OpenItemRecord(item, false);
+        menu.itemRecordModal.OpenModal(item);
     }
 }

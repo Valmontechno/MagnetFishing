@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public Sea sea;
     [HideInInspector] public PlayerController player;
+    [HideInInspector] public Menu menu;
 
     [HideInInspector] public SubmergedItem overlappedSubmergedItem = null;
 
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
     public GameSettings GameSettings { get; private set; }
 
     readonly bool[] pausedInputsState = new bool[3];
+
+    public Item[] bikeItems;
 
 
     private void Awake()
@@ -52,8 +55,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        HideMouse();
     }
 
 #if !UNITY_EDITOR
@@ -77,9 +79,6 @@ public class GameManager : MonoBehaviour
         InputActions.Player.Disable();
         InputActions.Boat.Disable();
 
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
         InputActions.Menu.Enable();
     }
 
@@ -91,10 +90,19 @@ public class GameManager : MonoBehaviour
         if (pausedInputsState[1]) InputActions.Player.Enable();
         if (pausedInputsState[2]) InputActions.Boat.Enable();
 
+        InputActions.Menu.Disable();
+    }
+
+    public void ShowMouse()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void HideMouse()
+    {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        InputActions.Menu.Disable();
     }
 
     public void ApplySettings()
