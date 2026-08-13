@@ -20,6 +20,7 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] RippleGenerator fishingFloat;
     [SerializeField] Menu menu;
     [SerializeField] HUD hud;
+    [SerializeField] Transform powerBar;
 
     int collisionCount = 0;
 
@@ -144,12 +145,16 @@ public class FishingHandler : MonoBehaviour
 
                     if (gameManager.bikeItems.Contains(item))
                     {
-                        menu.bikeQuestModal.OpenModal();
+                        menu.bikeQuestModal.OpenModal(item);
                         while (menu.bikeQuestModal.IsOpen) { yield return null; }
                     }
 
                     gameManager.HideMouse();
                 }
+            }
+            else // Failure
+            {
+                print("Failure");
             }
         }
     }
@@ -157,6 +162,7 @@ public class FishingHandler : MonoBehaviour
     private void Update()
     {
         fishingFloat.transform.position = ToWorld3D(magnet2D.transform.position, fishingFloat.transform.localPosition.y);
+        powerBar.position = Camera.main.WorldToScreenPoint(fishingFloat.transform.position);
     }
 
     public bool CanFish()

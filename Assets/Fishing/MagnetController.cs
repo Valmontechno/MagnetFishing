@@ -1,6 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class MagnetController : MonoBehaviour
 {
@@ -29,9 +30,22 @@ public class MagnetController : MonoBehaviour
     public const float refMasse = 3;
     [SerializeField] float releaseFactor;
 
+    [Space]
+    [SerializeField] GameObject powerBar;
+    [SerializeField] Image powerBarForeground;
+    [SerializeField] Gradient powerBarGradient;
+    [SerializeField] float maxPower;
+    [SerializeField] float powerCounsumeSpeed;
+    [SerializeField] float powerRegenerateSpeed;
+    [SerializeField] float groundSlopeLimit;
+    float power;
+
     Vector2 mouseInput = Vector2.zero;
     float scrollInput = 0;
     bool holding = false;
+
+    bool isGrounded;
+    readonly HashSet<Collider2D> groundColliders = new();
 
     public enum State { Fishing, Success, Failure }
     public State CurrentState { get; private set; }
@@ -65,13 +79,18 @@ public class MagnetController : MonoBehaviour
         CurrentState = State.Fishing;
 
         this.masse = masse;
+        power = maxPower;
+        groundColliders.Clear();
 
+        powerBar.SetActive(true);
         gameObject.SetActive(true);
     }
 
     void EndFishing(State state)
     {
         CurrentState = state;
+
+        powerBar.SetActive(false);
         gameObject.SetActive(false);
     }
 
@@ -82,9 +101,23 @@ public class MagnetController : MonoBehaviour
             scrollInput += gameManager.InputActions.Fishing.Pull.ReadValue<float>();
         holding = gameManager.InputActions.Fishing.Hold.ReadValue<float>() > 0;
 
+
+        if (isGrounded || groundColliders.Count > 0)
+            power = Mathf.Min(power + powerRegenerateSpeed * Time.deltaTime, maxPower);
+        else
+            power = Mathf.Max(power - powerCounsumeSpeed * Time.deltaTime, 0);
+
+        powerBarForeground.fillAmount = power / maxPower;
+        powerBarForeground.color = powerBarGradient.Evaluate(powerBarForeground.fillAmount);
+
+
         if (transform.position.y <= 0)
         {
             EndFishing(State.Success);
+        }
+        else if (power <= 0)
+        {
+            EndFishing(State.Failure);
         }
     }
 
@@ -92,9 +125,7 @@ public class MagnetController : MonoBehaviour
     {
         mouseInput = Vector2.ClampMagnitude(mouseInput, maxMouseMove);
 
-        //Vector2 pos2start = (Vector2)startPoint.position - (Vector2)transform.position;
-        //bool isGrounded = pos2start.magnitude <= startRadius;
-        bool isGrounded = transform.position.y >= startPoint.position.y - startRadius;
+        isGrounded = transform.position.y >= startPoint.position.y - startRadius;
 
         Vector2 velocity = Vector2.zero;
 
@@ -115,5 +146,18 @@ public class MagnetController : MonoBehaviour
 
         mouseInput = Vector2.zero;
         scrollInput *= scrollPullDrag;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (Vector2.Angle(collision.contacts[0].normal, Vector2.down) <= groundSlopeLimit)
+        {
+            groundColliders.Add(collision.collider);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        groundColliders.Remove(collision.collider);
     }
 }

@@ -28,7 +28,7 @@ public class Menu : MonoBehaviour
 
     [Header("Modals")]
     public ItemRecordModal itemRecordModal;
-    public Modal bikeQuestModal;
+    public BikeQuestModal bikeQuestModal;
 
 
     private void Awake()

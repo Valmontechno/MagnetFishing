@@ -68,7 +68,7 @@ MonoBehaviour:
   exitSlopLimit: 45
   checkGroundLayer:
     serializedVersion: 2
-    m_Bits: 39
+    m_Bits: 3072
   checkGroundRayOrigin: {fileID: 3194420348319601368}
   checkGroundOffset: 3
   checkGroundDistance: 6

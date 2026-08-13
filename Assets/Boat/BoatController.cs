@@ -183,7 +183,7 @@ public class BoatController : MonoBehaviour
         {
             if (Physics.Raycast(checkGroundRayOrigin.position + transform.TransformDirection(direction) * checkGroundOffset + Vector3.up * 3, Vector3.down, out RaycastHit hit, 10, checkGroundLayer))
             {
-                if (Vector3.Angle(Vector3.up, hit.normal) <= exitSlopLimit)
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("CanLand") && Vector3.Angle(Vector3.up, hit.normal) <= exitSlopLimit)
                 {
                     exitPosition = hit.point;
                     return true;

@@ -9,6 +9,11 @@ public class BikeQuestModal : Modal
 
     public override void OpenModal()
     {
+        OpenModal(null);
+    }
+
+    public void OpenModal(Item newPart)
+    {
         base.OpenModal();
 
         bike.SetActive(true);
@@ -17,7 +22,12 @@ public class BikeQuestModal : Modal
 
         for (int i = 0; i < GameManager.Instance.bikeItems.Length; i++)
         {
-            bike.transform.GetChild(i).GetComponent<Renderer>().material = GameManager.Instance.Inventory.ContainsKey(GameManager.Instance.bikeItems[i]) ? obtainedMaterial : notObtainedMaterial;
+            Transform part = bike.transform.GetChild(i);
+            part.GetComponent<Renderer>().material = GameManager.Instance.Inventory.ContainsKey(GameManager.Instance.bikeItems[i]) ? obtainedMaterial : notObtainedMaterial;
+            if (GameManager.Instance.bikeItems[i] == newPart)
+            {
+                part.GetComponent<Animator>().SetTrigger("Obtain");
+            }
         }
     }
 

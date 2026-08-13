@@ -16,5 +16,5 @@ MonoBehaviour:
   itemName: "Cadre de v\xE9lo"
   visual: {fileID: 919132149155446097, guid: 7b7c5fbf54440324eb3e6c2a12ac078a, type: 3}
   obstacle: {fileID: 2088341565515705770, guid: 780af7519e0fb764aaef65964540383c, type: 3}
-  masse: 1
+  masse: 3
   gramMasse: 3000

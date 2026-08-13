@@ -53,6 +53,10 @@ PrefabInstance:
       value: road-straight (2)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 425b7fbf438f13d4d9abb69f4373a22e, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 425b7fbf438f13d4d9abb69f4373a22e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}

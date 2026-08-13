@@ -53,6 +53,10 @@ PrefabInstance:
       value: road-intersection-path
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 377a058ea1fd5df429a481011c615958, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 377a058ea1fd5df429a481011c615958, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}

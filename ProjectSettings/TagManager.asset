@@ -16,8 +16,8 @@ TagManager:
   - ItemShooting
   - Physic
   - Boat
-  - 
-  - 
+  - CanLand
+  - CannotLand
   - 
   - 
   - 

@@ -32,4 +32,9 @@ public class Sea : MonoBehaviour
         material.SetVectorArray("_ripples", ripples);
         rippleIndex = (rippleIndex + 1) % ripplesCount;
     }
+
+    public void SetTargetPosition(Vector2 position)
+    {
+        material.SetVector("_TargetPosition", position);
+    }
 }

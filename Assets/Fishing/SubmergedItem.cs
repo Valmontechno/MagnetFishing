@@ -1,9 +1,10 @@
-using UnityEditor;
 using UnityEngine;
 
 public class SubmergedItem : MonoBehaviour
 {
     public Item item;
+
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (TryGetComponent(out Collider collider))
@@ -13,11 +14,12 @@ public class SubmergedItem : MonoBehaviour
 
         if (item != null)
         {
-            var iconContent = EditorGUIUtility.IconContent("sv_label_1");
-            EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
+            var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_1");
+            UnityEditor.EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
             gameObject.name = item.name;
         }
     }
+#endif
 
     private void OnDrawGizmos()
     {

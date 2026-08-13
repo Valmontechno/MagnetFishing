@@ -4,7 +4,7 @@ public class Target : MonoBehaviour
 {
     int collisionCount;
 
-    private void Awake()
+    private void Start()
     {
         SetVisible(false);
     }
@@ -32,6 +32,17 @@ public class Target : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
+        enabled = visible;
         transform.GetChild(0).gameObject.SetActive(visible);
+
+        if (!visible)
+        {
+            GameManager.Instance.sea.SetTargetPosition(Vector2.zero);
+        }
+    }
+
+    private void Update()
+    {
+        GameManager.Instance.sea.SetTargetPosition(Utils.XZ(transform.position));
     }
 }
