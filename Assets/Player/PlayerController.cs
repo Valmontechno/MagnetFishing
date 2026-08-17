@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 {
     GameManager gameManager;
     CharacterController characterController;
+    Animator animator;
     FishingHandler fishingHandler;
 
     [Space]
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float accel;
     [SerializeField] float decel;
     [SerializeField] float gravity;
+    [SerializeField] float visualRotationSpeed;
 
     Vector2 horizontalVelocity;
     float verticalVelocity;
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviour
         gameManager.player = this;
 
         characterController = GetComponent<CharacterController>();
+        animator = visual.GetComponent<Animator>();
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>();
 
         gameManager.InputActions.Player.Interact.performed += Interact;
@@ -117,6 +120,14 @@ public class PlayerController : MonoBehaviour
             pos.y = Math.Max(pos.y, -3);
             Teleport(pos);
         }
+
+        if (moveInput.sqrMagnitude > 0.01) {
+            Vector3 rotation = visual.transform.rotation.eulerAngles;
+            float targetRotY = camera.transform.eulerAngles.y - Vector2.SignedAngle(Vector2.up, moveInput);
+            rotation.y = Mathf.MoveTowardsAngle(rotation.y, targetRotY, visualRotationSpeed * Time.deltaTime);
+            visual.transform.rotation = Quaternion.Euler(rotation);
+        }
+        animator.SetFloat("Speed", horizontalVelocity.magnitude / maxSpeed);
     }
 
     void UpdateFishing()

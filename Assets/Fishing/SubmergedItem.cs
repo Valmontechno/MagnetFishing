@@ -2,7 +2,19 @@ using UnityEngine;
 
 public class SubmergedItem : MonoBehaviour
 {
+    [NotNull(UnityMessageType.Warning)]
+    [DynamicHelp(nameof(GetHelpMessage), UnityMessageType.None)]
     public Item item;
+
+    string GetHelpMessage()
+    {
+        if (item != null)
+            return
+                "Masse: " + item.masse.ToString() + "\n" +
+                "Obstacle: " + (item.obstacle == null ? "null" : item.obstacle.name);
+        else
+            return "";
+    }
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -12,12 +24,18 @@ public class SubmergedItem : MonoBehaviour
             collider.isTrigger = true;
         }
 
+        GUIContent iconContent;
         if (item != null)
         {
-            var iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_1");
-            UnityEditor.EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
+            iconContent = UnityEditor.EditorGUIUtility.IconContent(item.obstacle != null ? "sv_label_1" : "sv_label_4");
             gameObject.name = item.name;
         }
+        else
+        {
+            iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_6");
+            gameObject.name = "null";
+        }
+        UnityEditor.EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
     }
 #endif
 
@@ -34,7 +52,7 @@ public class SubmergedItem : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.Inventory.ContainsKey(item))
+        if (item == null || GameManager.Instance.Inventory.ContainsKey(item))
         {
             Destroy(gameObject);
         }

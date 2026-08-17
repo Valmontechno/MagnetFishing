@@ -9,8 +9,10 @@ public class BoatController : MonoBehaviour
     GameManager gameManager;
     Rigidbody rb;
     FishingHandler fishingHandler;
+    Animator animator;
 
     [Space]
+    [SerializeField] GameObject boatPlayerVisual;
     [SerializeField] new GameObject camera;
     CinemachineOrbitalFollow orbitalFollow;
     [SerializeField] Transform fishingPivot;
@@ -59,6 +61,7 @@ public class BoatController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>(true);
+        animator = boatPlayerVisual.GetComponent<Animator>();
 
         gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
         gameManager.InputActions.Boat.ExitBoat.performed += ExitBoat;
@@ -233,6 +236,7 @@ public class BoatController : MonoBehaviour
         camera.SetActive(true);
         ResetCamera();
         gameManager.player.EnterBoat();
+        boatPlayerVisual.SetActive(true);
         hud.HideInteractionTooltip();
     }
 
@@ -243,6 +247,7 @@ public class BoatController : MonoBehaviour
         enabled = false;
         camera.SetActive(false);
         gameManager.player.ExitBoat(exitPosition);
+        boatPlayerVisual.SetActive(false);
         hud.HideInteractionTooltip();
     }
 }

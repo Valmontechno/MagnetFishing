@@ -28,5 +28,11 @@ public class Show2D : MonoBehaviour
             else
                 Gizmos.DrawWireSphere(circle.offset, circle.radius);
         }
+        else if (TryGetComponent(out PolygonCollider2D polygon)) {
+            for (int i = 0; i < polygon.pathCount; i++)
+            {
+                Gizmos.DrawLineStrip(Array.ConvertAll<Vector2, Vector3>(polygon.GetPath(i), v => v), true);
+            }
+        }
     }
 }

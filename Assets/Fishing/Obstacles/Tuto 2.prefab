@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Show2D
   color: {r: 1, g: 0, b: 0, a: 1}
-  fill: 1
+  fill: 0
 --- !u!1 &7854244319011210891
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,4 +218,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Show2D
   color: {r: 1, g: 0, b: 0, a: 1}
-  fill: 1
+  fill: 0

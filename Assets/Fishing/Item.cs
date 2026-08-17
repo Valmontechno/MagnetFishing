@@ -1,24 +1,44 @@
+﻿using System;
 using System.IO;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item", menuName = "Scriptable Objects/Item")]
 public class Item : ScriptableObject
 {
+    [ShowWarningIf(nameof(UseCount), 1, "Unused", Comparison = UnityComparisonMethod.Less)]
     [EditorButton(nameof(GenerateIcon), PositionType = ButtonPositionType.Above)]
+#if UNITY_EDITOR
+    [ScriptableObjectIcon]
+#endif
     public Sprite icon;
+    [ShowWarningIf(nameof(UseCount), 1, "Used several times", Comparison = UnityComparisonMethod.Greater)]
+    public GameObject visual;
+    public Quaternion rotation;
+    public bool recenter = true;
 
     [Space]
     public string itemName;
-    public GameObject visual;
+    [NotNull(UnityMessageType.Warning)]
     public GameObject obstacle;
     public float masse = 1;
     public int gramMasse;
 
+    int UseCount()
+    {
+        int count = 0;
+        foreach (SubmergedItem submergedItem in Resources.FindObjectsOfTypeAll<SubmergedItem>())
+        {
+            if (submergedItem.item == this)
+                count++;
+        }
+        return count;
+    }
 
-    public Vector3 GetScale()
+    public void GetOffsetAndScale(out Vector3 offset, out Vector3 scale)
     {
         MeshRenderer mr = visual.GetComponentInChildren<MeshRenderer>();
-        return Vector3.one / mr.bounds.size.magnitude * 10;
+        offset = mr.bounds.center;
+        scale = Vector3.one / mr.bounds.size.magnitude * 10;
     }
 
     void GenerateIcon()
@@ -75,6 +95,9 @@ public class Item : ScriptableObject
         importer.SaveAndReimport();
 
         icon = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets" + path);
+
+        UnityEditor.EditorUtility.SetDirty(this);
+        UnityEditor.AssetDatabase.SaveAssets();
 
         Debug.Log($"Icon Saved : {"Assets" + path}");
 #endif

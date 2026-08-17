@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class Utils
@@ -21,6 +22,11 @@ public static class Utils
     {
         vector.y = y;
         return vector;
+    }
+
+    public static int Modulo(int a, int b)
+    {
+        return (((a % b) + b) % b);
     }
 
     public static float Warp180(float value)
