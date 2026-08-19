@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Menu menu;
 
     [HideInInspector] public SubmergedItem overlappedSubmergedItem = null;
+
+    public event Action<bool> SubmergedItemVisibilityChanged;
 
     InteractiveObject interactiveObject;
     public InteractiveObject InteractiveObject
@@ -108,5 +111,10 @@ public class GameManager : MonoBehaviour
     public void ApplySettings()
     {
         FindAnyObjectByType<MagnetController>(FindObjectsInactive.Include).scrollEnabled = GameSettings.scrollEnabled;
+    }
+
+    public void SetSubmergedItemVisibility(bool visible)
+    {
+        SubmergedItemVisibilityChanged?.Invoke(visible);
     }
 }

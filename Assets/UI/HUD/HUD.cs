@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ public class HUD : MonoBehaviour
 
     [SerializeField] GameObject interactionTooltip;
     [SerializeField] TextMeshProUGUI interactionTooltipText;
+    [SerializeField] GameObject launchMagnetTooltip;
+    [SerializeField] Transform toastMessageContainer;
+    [SerializeField] GameObject toastTextPrefab;
 
     private void Start()
     {
@@ -42,5 +46,29 @@ public class HUD : MonoBehaviour
     public void HideInteractionTooltip()
     {
         interactionTooltip.SetActive(false);
+    }
+
+    public void SetLaunchMagnetTooltipVisibility(bool visible)
+    {
+        launchMagnetTooltip.SetActive(visible);
+    }
+
+    public void ToastMessage(string message, UISound uiSound)
+    {
+        StartCoroutine(DisplayToastMessageRoutine(message, uiSound));
+    }
+
+    IEnumerator DisplayToastMessageRoutine(string message, UISound uiSound)
+    {
+        GameObject toastMessage = Instantiate(toastTextPrefab, toastMessageContainer);
+        toastMessage.GetComponent<TextMeshProUGUI>().text = message;
+
+        AudioManager.Instance.PlayUI(uiSound);
+
+        Animation animation = toastMessage.GetComponent<Animation>();
+        yield return new WaitUntil(() => animation.isPlaying);
+        yield return new WaitUntil(() => !animation.isPlaying);
+
+        Destroy(toastMessage);
     }
 }

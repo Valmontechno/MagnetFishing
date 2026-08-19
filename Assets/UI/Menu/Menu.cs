@@ -10,9 +10,11 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour
 {
     GameManager gameManager;
+    AudioManager audioManager;
 
     [Header("Menu")]
     [SerializeField] GameObject menu;
+    [SerializeField] HUD hud;
     public bool IsMenuOpen { get; private set; }
     [Serializable] struct Tab { public Button button; public GameObject content; }
     [SerializeField] Tab[] tabs;
@@ -35,6 +37,7 @@ public class Menu : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         gameManager.menu = this;
+        audioManager = AudioManager.Instance;
 
         IsMenuOpen = false;
     }
@@ -85,6 +88,7 @@ public class Menu : MonoBehaviour
         menu.SetActive(true);
         gameManager.PauseGame();
         gameManager.ShowMouse();
+        hud.gameObject.SetActive(false);
 
         EnableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
         mouseSensitivitySlider.value = Mathf.Log(gameManager.GameSettings.mouseSensitivity, 2);
@@ -96,6 +100,8 @@ public class Menu : MonoBehaviour
             GameObject itemSlotButton = Instantiate(itemSlotButtonPrefab, itemSlotGrid);
             itemSlotButton.GetComponent<ItemSlotButton>().Init(this, item);
         }
+
+        audioManager.PlayUI(UISound.Close);
     }
 
     private void CloseMenu(InputAction.CallbackContext context)
@@ -113,6 +119,7 @@ public class Menu : MonoBehaviour
         gameManager.ApplySettings();
         gameManager.UnpauseGame();
         gameManager.HideMouse();
+        hud.gameObject.SetActive(true);
 
         if (itemRecordModal.IsOpen)
             itemRecordModal.CloseModal();
@@ -120,6 +127,8 @@ public class Menu : MonoBehaviour
 
         while (itemSlotGrid.childCount > 0)
             DestroyImmediate(itemSlotGrid.GetChild(0).gameObject);
+
+        audioManager.PlayUI(UISound.Open);
     }
 
     public void SetTab(int index)
@@ -129,10 +138,12 @@ public class Menu : MonoBehaviour
             tabs[i].button.interactable = i != index;
             tabs[i].content.SetActive(i == index);
         }
+        audioManager.PlayUI(UISound.Tab);
     }
 
     public void Quit()
     {
+        audioManager.PlayUI(UISound.Close);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
 #else
@@ -142,6 +153,7 @@ public class Menu : MonoBehaviour
 
     public void SetScrollEnabled(bool enabled)
     {
+        audioManager.PlayUI(UISound.Click);
         gameManager.GameSettings.scrollEnabled = enabled;
     }
 

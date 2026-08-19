@@ -22,6 +22,8 @@ public class Modal : MonoBehaviour
             GameManager.Instance.PauseGame();
         }
         gameObject.SetActive(true);
+
+        AudioManager.Instance.PlayUI(UISound.Open);
     }
 
     public virtual void CloseModal()
@@ -35,5 +37,7 @@ public class Modal : MonoBehaviour
             GameManager.Instance.UnpauseGame();
         }
         gameObject.SetActive(false);
+
+        AudioManager.Instance.PlayUI(UISound.Close);
     }
 }

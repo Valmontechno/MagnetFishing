@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class ItemRecordModal : Modal
 {
-    [SerializeField] TMP_InputField itemRecordNameInput;
+    [SerializeField] TextMeshProUGUI itemNameText;
+    //[SerializeField] TMP_InputField itemRecordNameInput;
     [SerializeField] float rotateItemVisualSpeed;
     [SerializeField] ShootingCamera shootingCamera;
 
@@ -21,9 +22,11 @@ public class ItemRecordModal : Modal
 
         this.itemSlot = itemSlot;
 
-        itemRecordNameInput.text = itemSlot.userName;
-        if (itemSlot.userName == "")
-            itemRecordNameInput.Select();
+        itemNameText.text = item.itemName;
+
+        //itemRecordNameInput.text = itemSlot.userName;
+        //if (itemSlot.userName == "")
+        //    itemRecordNameInput.Select();
 
         shootingCamera.StartShooting(item);
     }

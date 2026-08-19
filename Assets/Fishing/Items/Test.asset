@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: 
   obstacle: {fileID: 0}
-  masse: 1
+  masse: 5
   gramMasse: 0

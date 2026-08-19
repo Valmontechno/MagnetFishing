@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class FishingHandler : MonoBehaviour
 {
     GameManager gameManager;
+    AudioManager audioManager;
+    LineRenderer lineRenderer;
 
     [Space]
     [SerializeField] float scale;
@@ -21,8 +25,17 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] Menu menu;
     [SerializeField] HUD hud;
     [SerializeField] Transform powerBar;
+    [SerializeField] Transform ropeOrigin;
+    [SerializeField] string noItemMessage;
 
-    int collisionCount = 0;
+    [Space]
+    [SerializeField] AudioResource ploufSound;
+    [SerializeField] AudioResource bigPloufSound;
+    [SerializeField] AudioResource magnetSound;
+    [SerializeField] AudioResource getItemSound;
+
+    //public int collisionCount = 0;
+    readonly HashSet<Collider> collisions = new();
 
     SubmergedItem submergedItem;
     GameObject obstacle;
@@ -30,6 +43,8 @@ public class FishingHandler : MonoBehaviour
     private void Awake()
     {
         gameManager = GameManager.Instance;
+        audioManager = AudioManager.Instance;
+        lineRenderer = GetComponent<LineRenderer>();
     }
 
     Vector3 ToLocal3D(Vector2 pos, float y=0)
@@ -65,11 +80,12 @@ public class FishingHandler : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!other.isTrigger)
         {
-            collisionCount++;
+            //collisionCount++;
+            collisions.Add(other);
         }
     }
 
@@ -77,7 +93,8 @@ public class FishingHandler : MonoBehaviour
     {
         if (!other.isTrigger)
         {
-            collisionCount--;
+            //collisionCount--;
+            collisions.Remove(other);
         }
     }
 
@@ -89,25 +106,42 @@ public class FishingHandler : MonoBehaviour
             camera.SetActive(true);
             magnet2D.ResetPosition();
             hud.HideInteractionTooltip();
+            hud.SetLaunchMagnetTooltipVisibility(false);
+            gameManager.SetSubmergedItemVisibility(false);
 
             yield return new WaitForSeconds(2);
 
             submergedItem = gameManager.overlappedSubmergedItem;
 
+            fishingFloat.gameObject.SetActive(true);
+            fishingFloat.transform.position = target.transform.position;
+            lineRenderer.enabled = true;
+
+            audioManager.PlaySFXAt(ploufSound, fishingFloat.transform.position);
+
             if (submergedItem != null)
             {
+                fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
+                magnet2D.StartFishing(submergedItem.item.masse);
+
+
+                yield return new WaitForSeconds(1);
+
                 if (submergedItem.item.obstacle != null)
                     obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
 
-                fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
-                magnet2D.StartFishing(submergedItem.item.masse);
+                audioManager.PlaySFXAt(magnetSound, fishingFloat.transform.position);
             }
             else
             {
-                fishingFloat.factor = 1 / MagnetController.refMasse;
-                magnet2D.StartFishing(1);
+                gameManager.sea.GenerateRipple(Utils.XZ(fishingFloat.transform.position), 0.25f);
+
+                yield return new WaitForSeconds(0.7f);
+
+                magnet2D.EndFishing(MagnetController.State.Failure);
+
+                hud.ToastMessage(noItemMessage, UISound.Error);
             }
-            fishingFloat.gameObject.SetActive(true);
         }
 
         while (magnet2D.CurrentState == MagnetController.State.Fishing) { yield return null; }
@@ -117,14 +151,20 @@ public class FishingHandler : MonoBehaviour
             enabled = false;
             camera.SetActive(false);
             fishingFloat.gameObject.SetActive(false);
+            lineRenderer.enabled = false;
             fishingFloat.factor = 1;
+            gameManager.SetSubmergedItemVisibility(true);
 
             if (obstacle != null)
                 Destroy(obstacle);
 
+            gameManager.sea.GenerateRipple(Utils.XZ(fishingFloat.transform.position), 0.25f);
+
 
             if (magnet2D.CurrentState == MagnetController.State.Success)
             {
+                audioManager.PlaySFXAt(bigPloufSound, fishingFloat.transform.position);
+
                 Item item = null;
                 if (submergedItem != null)
                 {
@@ -137,6 +177,7 @@ public class FishingHandler : MonoBehaviour
                 if (item != null)
                 {
                     gameManager.ShowMouse();
+                    audioManager.PlayUI(getItemSound);
 
                     ItemSlot itemSlot = new(gameManager.Inventory.Count);
                     menu.itemRecordModal.OpenModal(item, itemSlot);
@@ -152,9 +193,9 @@ public class FishingHandler : MonoBehaviour
                     gameManager.HideMouse();
                 }
             }
-            else // Failure
+            else /*if (magnet2D.CurrentState != MagnetController.State.Failure)*/
             {
-                print("Failure");
+                audioManager.PlaySFXAt(ploufSound, fishingFloat.transform.position);
             }
         }
     }
@@ -163,6 +204,9 @@ public class FishingHandler : MonoBehaviour
     {
         fishingFloat.transform.position = ToWorld3D(magnet2D.transform.position, fishingFloat.transform.localPosition.y);
         powerBar.position = Camera.main.WorldToScreenPoint(fishingFloat.transform.position);
+
+        lineRenderer.SetPosition(0, fishingFloat.transform.position);
+        lineRenderer.SetPosition(1, ropeOrigin.position + Vector3.up * 1);
     }
 
     public bool CanFish()
@@ -172,6 +216,7 @@ public class FishingHandler : MonoBehaviour
 
     public bool CanLaunch()
     {
-        return collisionCount == 0;
+        //return collisionCount == 0;
+        return collisions.Count == 0;
     }
 }

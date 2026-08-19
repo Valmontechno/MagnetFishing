@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SubmergedItem : MonoBehaviour
 {
+    new ParticleSystem particleSystem;
+
     [NotNull(UnityMessageType.Warning)]
     [DynamicHelp(nameof(GetHelpMessage), UnityMessageType.None)]
     public Item item;
@@ -56,6 +58,16 @@ public class SubmergedItem : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else
+        {
+            particleSystem = GetComponentInChildren<ParticleSystem>();
+            GameManager.Instance.SubmergedItemVisibilityChanged += SetVisibility;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.SubmergedItemVisibilityChanged -= SetVisibility;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -77,5 +89,17 @@ public class SubmergedItem : MonoBehaviour
     public void Remove()
     {
         Destroy(gameObject);
+    }
+
+    void SetVisibility(bool visible)
+    {
+        if (visible)
+        {
+            particleSystem.Play();
+        }
+        else
+        {
+            particleSystem.Stop();
+        }
     }
 }

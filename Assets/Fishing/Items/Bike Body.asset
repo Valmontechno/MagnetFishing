@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 0
   itemName: "Cadre de v\xE9lo"
-  obstacle: {fileID: 0}
-  masse: 3
+  obstacle: {fileID: 4744532286807182270, guid: 1869f79b69271f5489e8d300095c94f8, type: 3}
+  masse: 5
   gramMasse: 2495

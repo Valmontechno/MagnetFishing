@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   recenter: 1
   itemName: Canon
-  obstacle: {fileID: 0}
-  masse: 1
+  obstacle: {fileID: 6123874047559240724, guid: d0a699e4e280944428e29b942f53efa8, type: 3}
+  masse: 5
   gramMasse: 47400

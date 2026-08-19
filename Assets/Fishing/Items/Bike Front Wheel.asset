@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 0
   itemName: "Roue de v\xE9lo"
-  obstacle: {fileID: 0}
-  masse: 1
+  obstacle: {fileID: 8462105475088251225, guid: 96c49c9b64ecf73478fd48b7456cedcb, type: 3}
+  masse: 1.5
   gramMasse: 1079

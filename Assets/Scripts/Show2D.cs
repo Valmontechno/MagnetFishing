@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
 public class Show2D : MonoBehaviour
 {
     [SerializeField] Color color = Color.white;

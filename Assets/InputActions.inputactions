@@ -41,6 +41,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Abort",
+                    "type": "Button",
+                    "id": "fd9d5c46-eb86-4dab-bfed-7ea7a394660f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -118,6 +127,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Hold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6fe94ac5-862e-4017-938a-aa1648de27b0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Abort",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -254,7 +274,7 @@
                 {
                     "name": "",
                     "id": "10d047fc-4c5f-4058-86cd-ec238c6b9b0b",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -406,7 +426,7 @@
                 {
                     "name": "",
                     "id": "40e082b8-fe2f-436a-a964-44fdba32aa1e",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -463,7 +483,7 @@
                 {
                     "name": "",
                     "id": "50c5829d-e2a9-46c2-aa39-200d83d37b47",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

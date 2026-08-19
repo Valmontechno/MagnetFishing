@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MagnetController : MonoBehaviour
@@ -34,11 +36,16 @@ public class MagnetController : MonoBehaviour
     [SerializeField] GameObject powerBar;
     [SerializeField] Image powerBarForeground;
     [SerializeField] Gradient powerBarGradient;
+    [SerializeField] Color powerlessColor;
     [SerializeField] float maxPower;
     [SerializeField] float powerCounsumeSpeed;
     [SerializeField] float powerRegenerateSpeed;
     [SerializeField] float groundSlopeLimit;
     float power;
+    bool isPowerless = false;
+
+    [Space]
+    [SerializeField] GameObject fishingHUD;
 
     Vector2 mouseInput = Vector2.zero;
     float scrollInput = 0;
@@ -47,7 +54,7 @@ public class MagnetController : MonoBehaviour
     bool isGrounded;
     readonly HashSet<Collider2D> groundColliders = new();
 
-    public enum State { Fishing, Success, Failure }
+    public enum State { Fishing, Success, Failure, Aborted }
     public State CurrentState { get; private set; }
 
     private void Awake()
@@ -56,6 +63,13 @@ public class MagnetController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         gameObject.SetActive(false);
+
+        gameManager.InputActions.Fishing.Abort.performed += AbortFishing;
+    }
+
+    private void OnDestroy()
+    {
+        gameManager.InputActions.Fishing.Abort.performed -= AbortFishing;
     }
 
     private void OnEnable()
@@ -82,15 +96,17 @@ public class MagnetController : MonoBehaviour
         power = maxPower;
         groundColliders.Clear();
 
-        powerBar.SetActive(true);
+        //powerBar.SetActive(true);
+        fishingHUD.SetActive(true);
         gameObject.SetActive(true);
     }
 
-    void EndFishing(State state)
+    public void EndFishing(State state)
     {
         CurrentState = state;
 
-        powerBar.SetActive(false);
+        //powerBar.SetActive(false);
+        fishingHUD.SetActive(false);
         gameObject.SetActive(false);
     }
 
@@ -99,26 +115,37 @@ public class MagnetController : MonoBehaviour
         mouseInput += gameManager.InputActions.Fishing.Move.ReadValue<Vector2>();
         if (scrollEnabled)
             scrollInput += gameManager.InputActions.Fishing.Pull.ReadValue<float>();
-        holding = gameManager.InputActions.Fishing.Hold.ReadValue<float>() > 0;
+        holding = !isPowerless && gameManager.InputActions.Fishing.Hold.ReadValue<float>() > 0;
 
 
         if (isGrounded || groundColliders.Count > 0)
+        {
             power = Mathf.Min(power + powerRegenerateSpeed * Time.deltaTime, maxPower);
+            if (power >= maxPower)
+                isPowerless = false;
+        }
         else
+        {
             power = Mathf.Max(power - powerCounsumeSpeed * Time.deltaTime, 0);
+            if (power <= 0)
+                isPowerless = true;
+        }
 
         powerBarForeground.fillAmount = power / maxPower;
-        powerBarForeground.color = powerBarGradient.Evaluate(powerBarForeground.fillAmount);
+        if (isPowerless)
+            powerBarForeground.color = powerlessColor;
+        else
+            powerBarForeground.color = powerBarGradient.Evaluate(powerBarForeground.fillAmount);
 
 
         if (transform.position.y <= 0)
         {
             EndFishing(State.Success);
         }
-        else if (power <= 0)
-        {
-            EndFishing(State.Failure);
-        }
+        //else if (power <= 0)
+        //{
+        //    EndFishing(State.Failure);
+        //}
     }
 
     private void FixedUpdate()
@@ -159,5 +186,10 @@ public class MagnetController : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         groundColliders.Remove(collision.collider);
+    }
+
+    private void AbortFishing(InputAction.CallbackContext context)
+    {
+        EndFishing(State.Aborted);
     }
 }

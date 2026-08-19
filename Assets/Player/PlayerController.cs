@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
     GameManager gameManager;
+    AudioManager audioManager;
     CharacterController characterController;
     Animator animator;
     FishingHandler fishingHandler;
+    CinemachineInputAxisController cinemachineInputAxisController;
+    CinemachineOrbitalFollow orbitalFollow;
 
     [Space]
     [SerializeField] new CinemachineOrbitalFollow camera;
@@ -19,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject visual;
     [SerializeField] Transform fishingPivot;
     [SerializeField] Target target;
+    [SerializeField] HUD hud;
 
     [Space]
     [SerializeField] float maxSpeed;
@@ -26,6 +31,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float decel;
     [SerializeField] float gravity;
     [SerializeField] float visualRotationSpeed;
+
+    [Space]
+    [SerializeField] AudioResource ploufSound;
 
     Vector2 horizontalVelocity;
     float verticalVelocity;
@@ -40,10 +48,13 @@ public class PlayerController : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         gameManager.player = this;
+        audioManager = AudioManager.Instance;
 
         characterController = GetComponent<CharacterController>();
         animator = visual.GetComponent<Animator>();
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>();
+        cinemachineInputAxisController = camera.GetComponent<CinemachineInputAxisController>();
+        orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
 
         gameManager.InputActions.Player.Interact.performed += Interact;
         gameManager.InputActions.Player.LaunchMagnet.performed += LaunchMagnet;
@@ -58,6 +69,7 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         gameManager.InputActions.Player.Enable();
+        cinemachineInputAxisController.enabled = true;
 
         target.gameObject.SetActive(true);
     }
@@ -65,6 +77,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         gameManager.InputActions.Player.Disable();
+        cinemachineInputAxisController.enabled = false;
 
         target.gameObject.SetActive(false);
     }
@@ -136,6 +149,7 @@ public class PlayerController : MonoBehaviour
 
         canLaunchMagnet = fishingHandler.CanLaunch();
         target.SetVisible(canLaunchMagnet);
+        hud.SetLaunchMagnetTooltipVisibility(canLaunchMagnet);
     }
 
     private void FixedUpdate()
@@ -160,6 +174,8 @@ public class PlayerController : MonoBehaviour
         camera.enabled = false;
 
         gameManager.sea.GenerateRipple(Utils.XZ(transform.position), 1.25f);
+
+        audioManager.PlaySFXAt(ploufSound, transform.position);
 
         yield return new WaitForSeconds(2);
 
@@ -186,14 +202,16 @@ public class PlayerController : MonoBehaviour
     {
         enabled = false;
         visual.SetActive(false);
+        GameManager.Instance.sea.SetTargetPosition(Vector2.zero);
     }
 
-    public void ExitBoat(Vector3 position)
+    public void ExitBoat(Vector3 position, float rotationY)
     {
         enabled = true;
         visual.SetActive(true);
 
         Teleport(position);
+        SetRotation(rotationY);
     }
 
     private void LaunchMagnet(InputAction.CallbackContext context)
@@ -208,6 +226,10 @@ public class PlayerController : MonoBehaviour
     IEnumerator Fishing()
     {
         enabled = false;
+        animator.SetFloat("Speed", 0);
+        animator.SetTrigger("Throw");
+        SetRotation(camera.transform.eulerAngles.y);
+
         horizontalVelocity = Vector2.zero;
         verticalVelocity = 0;
 
@@ -216,5 +238,12 @@ public class PlayerController : MonoBehaviour
         yield return StartCoroutine(fishingHandler.Fishing());
 
         enabled = true;
+        gameManager.InputActions.Player.Enable();
+    }
+
+    void SetRotation(float y)
+    {
+        visual.transform.rotation = Quaternion.Euler(0, y, 0);
+        orbitalFollow.HorizontalAxis.Value = y;
     }
 }

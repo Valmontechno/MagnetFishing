@@ -45,15 +45,16 @@ public class BoatController : MonoBehaviour
     [Space]
     [SerializeField] float floatMaxDistance;
     [SerializeField] float floatMinDistance;
-    bool canLaunchMagnet = false;
-    bool magnetLaunched = false;
-    Vector2 relativeFloatPos;
+    //bool canLaunchMagnet = false;
+    //bool magnetLaunched = false;
+    //Vector2 relativeFloatPos;
 
     Vector2 moveInput, lookInput;
 
     readonly Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.right, Vector3.left };
     bool canExitBoat = false;
     Vector3 exitPosition;
+    float exitRotationY;
 
     private void Awake()
     {
@@ -63,13 +64,13 @@ public class BoatController : MonoBehaviour
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>(true);
         animator = boatPlayerVisual.GetComponent<Animator>();
 
-        gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
+        //gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
         gameManager.InputActions.Boat.ExitBoat.performed += ExitBoat;
     }
 
     private void OnDestroy()
     {
-        gameManager.InputActions.Boat.LaunchMagnet.performed -= LaunchMagnet;
+        //gameManager.InputActions.Boat.LaunchMagnet.performed -= LaunchMagnet;
         gameManager.InputActions.Boat.ExitBoat.performed -= ExitBoat;
     }
 
@@ -107,10 +108,10 @@ public class BoatController : MonoBehaviour
     {
         Navigate();
 
-        if (magnetLaunched && Vector2.Distance(relativeFloatPos, transform.position) >= floatMinDistance && fishingHandler.CanFish())
-        {
-            StartFishing();
-        }
+        //if (magnetLaunched && Vector2.Distance(relativeFloatPos, transform.position) >= floatMinDistance && fishingHandler.CanFish())
+        //{
+        //    StartFishing();
+        //}
 
         canExitBoat = CheckCanExit();
         if (canExitBoat)
@@ -124,6 +125,8 @@ public class BoatController : MonoBehaviour
         rb.linearVelocity += moveInput.y * accel * transform.forward;
         rb.angularVelocity += new Vector3(0, moveInput.x * angularAccel * (moveInput.y >= 0 ? 1 : -1), 0);
 
+        transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
         //print(rb.linearVelocity.magnitude);
     }
 
@@ -132,28 +135,28 @@ public class BoatController : MonoBehaviour
         moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
         lookInput = gameManager.InputActions.Boat.Look.ReadValue<Vector2>();
 
-        UpdateFishing();
+        //UpdateFishing();
         Look();
     }
 
-    void UpdateFishing()
-    {
-        if (magnetLaunched)
-        {
-            fishingPivot.LookAt(Utils.SetY(fishingFloat.transform.position, 0), Vector3.up);
+    //void UpdateFishing()
+    //{
+    //    if (magnetLaunched)
+    //    {
+    //        fishingPivot.LookAt(Utils.SetY(fishingFloat.transform.position, 0), Vector3.up);
 
-            relativeFloatPos = Utils.XZ(fishingFloat.transform.position - transform.position);
-            relativeFloatPos = Vector2.ClampMagnitude(relativeFloatPos, floatMaxDistance);
-            fishingFloat.transform.position = Utils.XyY(relativeFloatPos) + transform.position;
-        }
-        else
-        {
-            fishingPivot.rotation = Quaternion.Euler(0, camera.transform.rotation.eulerAngles.y, 0);
+    //        relativeFloatPos = Utils.XZ(fishingFloat.transform.position - transform.position);
+    //        relativeFloatPos = Vector2.ClampMagnitude(relativeFloatPos, floatMaxDistance);
+    //        fishingFloat.transform.position = Utils.XyY(relativeFloatPos) + transform.position;
+    //    }
+    //    else
+    //    {
+    //        fishingPivot.rotation = Quaternion.Euler(0, camera.transform.rotation.eulerAngles.y, 0);
 
-            canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= interactionMaxSpeed;
-            target.SetVisible(canLaunchMagnet);
-        }
-    }
+    //        canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= interactionMaxSpeed;
+    //        target.SetVisible(canLaunchMagnet);
+    //    }
+    //}
 
     void Look()
     {
@@ -168,7 +171,7 @@ public class BoatController : MonoBehaviour
         {
             recenterCameraTimer -= Time.deltaTime;
 
-            if (recenterCameraTimer <= 0 && moveInput.y > 0.1)
+            if (recenterCameraTimer <= 0 && moveInput.sqrMagnitude > 0.01)
             {
                 recenterCameraTargetSpeed = Mathf.Abs(moveInput.x) > 0.1 ? recenterCameraTurnSpeed : recenterCameraForwardSpeed;
             }
@@ -189,6 +192,7 @@ public class BoatController : MonoBehaviour
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("CanLand") && Vector3.Angle(Vector3.up, hit.normal) <= exitSlopLimit)
                 {
                     exitPosition = hit.point;
+                    exitRotationY = Vector2.SignedAngle(Utils.XZ(exitPosition - transform.position), Vector2.up);
                     return true;
                 }
             }
@@ -197,38 +201,38 @@ public class BoatController : MonoBehaviour
         return false;
     }
 
-    private void LaunchMagnet(InputAction.CallbackContext context)
-    {
-        if (magnetLaunched)
-        {
-            magnetLaunched = false;
-            fishingFloat.SetActive(false);
-        }
-        else if (canLaunchMagnet)
-        {
-            magnetLaunched = true;
-            target.SetVisible(false);
-            fishingFloat.SetActive(true);
-            fishingFloat.transform.position = target.transform.position;
-        }
-    }
+    //private void LaunchMagnet(InputAction.CallbackContext context)
+    //{
+    //    if (magnetLaunched)
+    //    {
+    //        magnetLaunched = false;
+    //        fishingFloat.SetActive(false);
+    //    }
+    //    else if (canLaunchMagnet)
+    //    {
+    //        magnetLaunched = true;
+    //        target.SetVisible(false);
+    //        fishingFloat.SetActive(true);
+    //        fishingFloat.transform.position = target.transform.position;
+    //    }
+    //}
 
-    void StartFishing()
-    {
-        StartCoroutine(Fishing());
-    }
+    //void StartFishing()
+    //{
+    //    StartCoroutine(Fishing());
+    //}
 
-    IEnumerator Fishing()
-    {
-        enabled = false;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+    //IEnumerator Fishing()
+    //{
+    //    enabled = false;
+    //    rb.linearVelocity = Vector3.zero;
+    //    rb.angularVelocity = Vector3.zero;
 
-        yield return StartCoroutine(fishingHandler.Fishing());
+    //    yield return StartCoroutine(fishingHandler.Fishing());
 
-        enabled = true;
-        magnetLaunched = false;
-    }
+    //    enabled = true;
+    //    magnetLaunched = false;
+    //}
 
     public void EnterBoat()
     {
@@ -246,7 +250,7 @@ public class BoatController : MonoBehaviour
 
         enabled = false;
         camera.SetActive(false);
-        gameManager.player.ExitBoat(exitPosition);
+        gameManager.player.ExitBoat(exitPosition, exitRotationY);
         boatPlayerVisual.SetActive(false);
         hud.HideInteractionTooltip();
     }

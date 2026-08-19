@@ -127,6 +127,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Abort"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd9d5c46-eb86-4dab-bfed-7ea7a394660f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -204,6 +213,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6fe94ac5-862e-4017-938a-aa1648de27b0"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Abort"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -340,7 +360,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""10d047fc-4c5f-4058-86cd-ec238c6b9b0b"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -492,7 +512,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""40e082b8-fe2f-436a-a964-44fdba32aa1e"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -549,7 +569,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""50c5829d-e2a9-46c2-aa39-200d83d37b47"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -651,6 +671,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Fishing_Pull = m_Fishing.FindAction("Pull", throwIfNotFound: true);
         m_Fishing_PullMouse = m_Fishing.FindAction("PullMouse", throwIfNotFound: true);
         m_Fishing_Hold = m_Fishing.FindAction("Hold", throwIfNotFound: true);
+        m_Fishing_Abort = m_Fishing.FindAction("Abort", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
@@ -757,6 +778,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Fishing_Pull;
     private readonly InputAction m_Fishing_PullMouse;
     private readonly InputAction m_Fishing_Hold;
+    private readonly InputAction m_Fishing_Abort;
     /// <summary>
     /// Provides access to input actions defined in input action map "Fishing".
     /// </summary>
@@ -784,6 +806,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Fishing/Hold".
         /// </summary>
         public InputAction @Hold => m_Wrapper.m_Fishing_Hold;
+        /// <summary>
+        /// Provides access to the underlying input action "Fishing/Abort".
+        /// </summary>
+        public InputAction @Abort => m_Wrapper.m_Fishing_Abort;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -822,6 +848,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Hold.started += instance.OnHold;
             @Hold.performed += instance.OnHold;
             @Hold.canceled += instance.OnHold;
+            @Abort.started += instance.OnAbort;
+            @Abort.performed += instance.OnAbort;
+            @Abort.canceled += instance.OnAbort;
         }
 
         /// <summary>
@@ -845,6 +874,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Hold.started -= instance.OnHold;
             @Hold.performed -= instance.OnHold;
             @Hold.canceled -= instance.OnHold;
+            @Abort.started -= instance.OnAbort;
+            @Abort.performed -= instance.OnAbort;
+            @Abort.canceled -= instance.OnAbort;
         }
 
         /// <summary>
@@ -1376,6 +1408,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHold(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Abort" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAbort(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
