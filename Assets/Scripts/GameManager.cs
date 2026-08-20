@@ -108,6 +108,15 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
+    }
+
     public void ApplySettings()
     {
         FindAnyObjectByType<MagnetController>(FindObjectsInactive.Include).scrollEnabled = GameSettings.scrollEnabled;

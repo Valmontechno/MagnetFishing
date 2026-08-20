@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BikeQuestModal : Modal
 {
@@ -6,6 +7,7 @@ public class BikeQuestModal : Modal
     [SerializeField] ShootingCamera shootingCamera;
     [SerializeField] Material obtainedMaterial;
     [SerializeField] Material notObtainedMaterial;
+    [SerializeField] AudioResource obtainSound;
 
     public override void OpenModal()
     {
@@ -28,6 +30,11 @@ public class BikeQuestModal : Modal
             {
                 part.GetComponent<Animator>().SetTrigger("Obtain");
             }
+        }
+
+        if (newPart != null)
+        {
+            AudioManager.Instance.PlayUI(obtainSound);
         }
     }
 

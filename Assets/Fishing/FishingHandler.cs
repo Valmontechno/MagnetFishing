@@ -140,7 +140,7 @@ public class FishingHandler : MonoBehaviour
 
                 magnet2D.EndFishing(MagnetController.State.Failure);
 
-                hud.ToastMessage(noItemMessage, UISound.Error);
+                hud.ToastMessage(noItemMessage);
             }
         }
 

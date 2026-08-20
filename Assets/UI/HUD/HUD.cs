@@ -53,17 +53,15 @@ public class HUD : MonoBehaviour
         launchMagnetTooltip.SetActive(visible);
     }
 
-    public void ToastMessage(string message, UISound uiSound)
+    public void ToastMessage(string message)
     {
-        StartCoroutine(DisplayToastMessageRoutine(message, uiSound));
+        StartCoroutine(DisplayToastMessageRoutine(message));
     }
 
-    IEnumerator DisplayToastMessageRoutine(string message, UISound uiSound)
+    IEnumerator DisplayToastMessageRoutine(string message)
     {
         GameObject toastMessage = Instantiate(toastTextPrefab, toastMessageContainer);
         toastMessage.GetComponent<TextMeshProUGUI>().text = message;
-
-        AudioManager.Instance.PlayUI(uiSound);
 
         Animation animation = toastMessage.GetComponent<Animation>();
         yield return new WaitUntil(() => animation.isPlaying);

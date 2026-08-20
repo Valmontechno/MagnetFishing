@@ -101,7 +101,7 @@ public class Menu : MonoBehaviour
             itemSlotButton.GetComponent<ItemSlotButton>().Init(this, item);
         }
 
-        audioManager.PlayUI(UISound.Close);
+        audioManager.PlayUI(UISound.Open);
     }
 
     private void CloseMenu(InputAction.CallbackContext context)
@@ -128,7 +128,7 @@ public class Menu : MonoBehaviour
         while (itemSlotGrid.childCount > 0)
             DestroyImmediate(itemSlotGrid.GetChild(0).gameObject);
 
-        audioManager.PlayUI(UISound.Open);
+        audioManager.PlayUI(UISound.Close);
     }
 
     public void SetTab(int index)
@@ -144,11 +144,7 @@ public class Menu : MonoBehaviour
     public void Quit()
     {
         audioManager.PlayUI(UISound.Close);
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.ExitPlaymode();
-#else
-        Application.Quit();
-#endif
+        gameManager.QuitGame();
     }
 
     public void SetScrollEnabled(bool enabled)

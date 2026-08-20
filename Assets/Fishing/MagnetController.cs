@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -9,6 +11,7 @@ public class MagnetController : MonoBehaviour
 {
     GameManager gameManager;
     Rigidbody2D rb;
+    AudioSource audioSource;
 
     [Space]
     public Transform startPoint;
@@ -47,6 +50,15 @@ public class MagnetController : MonoBehaviour
     [Space]
     [SerializeField] GameObject fishingHUD;
 
+    [Space]
+    [SerializeField] private float soundMinSpeed;
+    [SerializeField] private float soundMaxSpeed;
+    Vector3 prevPos = Vector3.zero;
+    [SerializeField, Range(0f, 1f)] private float soundVolume;
+    [SerializeField] float soundNotHoldVolumeFactor;
+    [SerializeField] float soundVolumeModifSpeed;
+    float soundVolumeTarget;
+
     Vector2 mouseInput = Vector2.zero;
     float scrollInput = 0;
     bool holding = false;
@@ -61,6 +73,7 @@ public class MagnetController : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
 
         gameObject.SetActive(false);
 
@@ -86,6 +99,9 @@ public class MagnetController : MonoBehaviour
     {
         transform.position = startPoint.position;
         rb.linearVelocity = Vector3.zero;
+
+        prevPos = transform.position;
+        soundVolumeTarget = 0;
     }
 
     public void StartFishing(float masse)
@@ -99,6 +115,8 @@ public class MagnetController : MonoBehaviour
         //powerBar.SetActive(true);
         fishingHUD.SetActive(true);
         gameObject.SetActive(true);
+
+        audioSource.Play();
     }
 
     public void EndFishing(State state)
@@ -108,6 +126,8 @@ public class MagnetController : MonoBehaviour
         //powerBar.SetActive(false);
         fishingHUD.SetActive(false);
         gameObject.SetActive(false);
+
+        audioSource.Stop();
     }
 
     private void Update()
@@ -146,6 +166,26 @@ public class MagnetController : MonoBehaviour
         //{
         //    EndFishing(State.Failure);
         //}
+
+        //audioSource.volume = Mathf.MoveTowards(audioSource.volume, targetVolume, volumeSpeed * Time.deltaTime);
+        //audioSource.volume = targetVolume;
+
+        float speed = Vector3.Distance(prevPos, transform.position) / Time.deltaTime;
+        prevPos = transform.position;
+
+        speed = Mathf.Clamp(speed, soundMinSpeed, soundMaxSpeed);
+        float t = Mathf.InverseLerp(soundMinSpeed, soundMaxSpeed, speed);
+        if (!holding) t *= soundNotHoldVolumeFactor;
+        soundVolumeTarget = t * soundVolume;
+
+        if (soundVolumeTarget >= audioSource.volume)
+        {
+            audioSource.volume = soundVolumeTarget;
+        }
+        else
+        {
+            audioSource.volume = Mathf.MoveTowards(audioSource.volume, soundVolumeTarget, soundVolumeModifSpeed * Time.deltaTime);
+        }
     }
 
     private void FixedUpdate()
@@ -155,6 +195,7 @@ public class MagnetController : MonoBehaviour
         isGrounded = transform.position.y >= startPoint.position.y - startRadius;
 
         Vector2 velocity = Vector2.zero;
+
 
         if (holding)
         {
