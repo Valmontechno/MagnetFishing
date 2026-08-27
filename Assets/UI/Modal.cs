@@ -16,12 +16,15 @@ public class Modal : MonoBehaviour
     public virtual void OpenModal()
     {
         IsOpen = true;
+        GameManager.Instance.menu.openModalCount++;
 
-        if (!GameManager.Instance.menu.IsMenuOpen)
+        if (!GameManager.Instance.menu.IsMenuOpen && GameManager.Instance.menu.openModalCount == 1)
         {
             GameManager.Instance.PauseGame();
         }
         gameObject.SetActive(true);
+
+        GameManager.Instance.hud.HideInteractionTooltip();
 
         AudioManager.Instance.PlayUI(UISound.Open);
     }
@@ -31,8 +34,9 @@ public class Modal : MonoBehaviour
         if (!IsOpen) return;
 
         IsOpen = false;
+        GameManager.Instance.menu.openModalCount--;
 
-        if (!GameManager.Instance.menu.IsMenuOpen)
+        if (!GameManager.Instance.menu.IsMenuOpen && GameManager.Instance.menu.openModalCount == 0)
         {
             GameManager.Instance.UnpauseGame();
         }

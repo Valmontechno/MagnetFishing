@@ -37,6 +37,9 @@ public class Menu : MonoBehaviour
     [Header("Modals")]
     public ItemRecordModal itemRecordModal;
     public BikeQuestModal bikeQuestModal;
+    [SerializeField] AlertModal alertModal;
+    public int openModalCount = 0;
+
 
 
     private void Awake()
@@ -56,7 +59,12 @@ public class Menu : MonoBehaviour
 
         menu.SetActive(false);
         itemRecordModal.CloseModal();
-        SetTab(0);
+
+        for (int i = 0; i < tabs.Length; i++)
+        {
+            tabs[i].button.interactable = i != 0;
+            tabs[i].content.SetActive(i == 0);
+        }
     }
 
     private void OnDestroy()
@@ -151,5 +159,10 @@ public class Menu : MonoBehaviour
     public void SetMouseSensitivity(float value)
     {
         gameManager.GameSettings.mouseSensitivity = Mathf.Pow(2, value);
+    }
+
+    public void Alert(string message, bool showMouse=false)
+    {
+        alertModal.OpenModal(message, showMouse);
     }
 }

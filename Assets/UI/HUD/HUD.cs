@@ -13,9 +13,10 @@ public class HUD : MonoBehaviour
     [SerializeField] Transform toastMessageContainer;
     [SerializeField] GameObject toastTextPrefab;
 
-    private void Start()
+    private void Awake()
     {
         gameManager = GameManager.Instance;
+        gameManager.hud = this;
 
         gameManager.OnInteractiveObjectChange += OnInteractiveObjectChange;
     }

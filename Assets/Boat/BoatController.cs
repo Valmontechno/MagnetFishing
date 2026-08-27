@@ -92,12 +92,12 @@ public class BoatController : MonoBehaviour
         target.gameObject.SetActive(false);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, floatMinDistance);
-        Gizmos.DrawWireSphere(transform.position, floatMaxDistance);
-    }
+    //private void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, floatMinDistance);
+    //    Gizmos.DrawWireSphere(transform.position, floatMaxDistance);
+    //}
 
     void ResetCamera()
     {

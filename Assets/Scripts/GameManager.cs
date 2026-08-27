@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Sea sea;
     [HideInInspector] public PlayerController player;
     [HideInInspector] public Menu menu;
+    [HideInInspector] public HUD hud;
 
     public event Action<bool> SubmergedItemVisibilityChanged;
 
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     public int money;
     public Dictionary<Item, ItemSlot> Inventory { get; private set; }
     public List<Achievement> Achievements { get; private set; }
+    public HashSet<string> GameState { get; private set; }
     public GameSettings GameSettings { get; private set; }
 
     readonly bool[] pausedInputsState = new bool[3];
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
 
             Inventory = new();
             Achievements = new();
+            GameState = new();
             GameSettings = new();
 
             Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);

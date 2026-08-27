@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] float maxSpeed;
     [SerializeField] float accel;
+    [SerializeField] float runningMaxSpeed;
+    [SerializeField] float runningAccel;
     [SerializeField] float decel;
     [SerializeField] float gravity;
     [SerializeField] float visualRotationSpeed;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] Achievement splashAchievement;
 
+    bool isRunning = false;
     Vector2 horizontalVelocity;
     float verticalVelocity;
     public Vector3 Velocity => new(horizontalVelocity.x, verticalVelocity, horizontalVelocity.y);
@@ -62,12 +65,14 @@ public class PlayerController : MonoBehaviour
 
         gameManager.InputActions.Player.Interact.performed += Interact;
         gameManager.InputActions.Player.LaunchMagnet.performed += LaunchMagnet;
+        gameManager.InputActions.Player.Run.performed += Run;
     }
 
     private void OnDestroy()
     {
         gameManager.InputActions.Player.Interact.performed -= Interact;
         gameManager.InputActions.Player.LaunchMagnet.performed -= LaunchMagnet;
+        gameManager.InputActions.Player.Run.performed -= Run;
     }
 
     private void OnEnable()
@@ -113,16 +118,16 @@ public class PlayerController : MonoBehaviour
         right.Normalize();
 
         if (Mathf.Abs(moveInput.x) > 0.01)
-            horizontalVelocity.x += moveInput.x * accel * Time.deltaTime;
+            horizontalVelocity.x += moveInput.x * (isRunning ? runningAccel : accel) * Time.deltaTime;
         else
             horizontalVelocity.x = Mathf.MoveTowards(horizontalVelocity.x, 0, decel * Time.deltaTime);
 
         if (Mathf.Abs(moveInput.y) > 0.01)
-            horizontalVelocity.y += moveInput.y * accel * Time.deltaTime;
+            horizontalVelocity.y += moveInput.y * (isRunning ? runningAccel : accel) * Time.deltaTime;
         else
             horizontalVelocity.y = Mathf.MoveTowards(horizontalVelocity.y, 0, decel * Time.deltaTime);
 
-        horizontalVelocity = Vector2.ClampMagnitude(horizontalVelocity, maxSpeed);
+        horizontalVelocity = Vector2.ClampMagnitude(horizontalVelocity, (isRunning ? runningMaxSpeed : maxSpeed));
 
         if (characterController.isGrounded)
             verticalVelocity = -0.5f;
@@ -144,7 +149,22 @@ public class PlayerController : MonoBehaviour
             rotation.y = Mathf.MoveTowardsAngle(rotation.y, targetRotY, visualRotationSpeed * Time.deltaTime);
             visual.transform.rotation = Quaternion.Euler(rotation);
         }
-        animator.SetFloat("Speed", horizontalVelocity.magnitude / maxSpeed);
+        else
+        {
+            isRunning = false;
+        }
+
+        if (horizontalVelocity.sqrMagnitude < 0.01)
+            animator.SetFloat("Speed", 0);
+        else if (!isRunning)
+            animator.SetFloat("Speed", 1);
+        else
+            animator.SetFloat("Speed", 2);
+    }
+
+    private void Run(InputAction.CallbackContext context)
+    {
+        isRunning = gameManager.GameState.Contains("can-run");
     }
 
     void UpdateFishing()

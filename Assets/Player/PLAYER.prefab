@@ -175,6 +175,8 @@ MonoBehaviour:
   hud: {fileID: 0}
   maxSpeed: 4
   accel: 8
+  runningMaxSpeed: 9
+  runningAccel: 9
   decel: 20
   gravity: -20
   visualRotationSpeed: 400
