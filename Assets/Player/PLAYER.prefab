@@ -179,6 +179,7 @@ MonoBehaviour:
   gravity: -20
   visualRotationSpeed: 400
   ploufSound: {fileID: 6418180475301049370, guid: cef4ac062d2b948409467c65aa3fdb08, type: 2}
+  splashAchievement: {fileID: 11400000, guid: cf302114ba747ad4da3f89a49b8e154a, type: 2}
 --- !u!136 &5453566211737044810
 CapsuleCollider:
   m_ObjectHideFlags: 0

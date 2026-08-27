@@ -63,6 +63,10 @@ MonoBehaviour:
   bigPloufSound: {fileID: 6418180475301049370, guid: cef4ac062d2b948409467c65aa3fdb08, type: 2}
   magnetSound: {fileID: 6418180475301049370, guid: 6a2f1ab5690bd9d4d8ae9ba4a5ee66df, type: 2}
   getItemSound: {fileID: 8300000, guid: 2383117569875ad4f906162ae14ede78, type: 3}
+  submergedItemLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  firstItems: []
 --- !u!65 &7465311484870605314
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -76,7 +80,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 72
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -92,7 +96,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2547009318041027133}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -110,7 +114,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -144,7 +148,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.041270304
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -156,8 +160,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.4264151, g: 0.41014346, b: 0.3982556, a: 1}
+      key1: {r: 0.4264151, g: 0.41014346, b: 0.3982556, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -181,7 +185,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0

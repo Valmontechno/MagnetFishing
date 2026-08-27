@@ -45,9 +45,12 @@ public class BoatController : MonoBehaviour
     [Space]
     [SerializeField] float floatMaxDistance;
     [SerializeField] float floatMinDistance;
-    //bool canLaunchMagnet = false;
+    bool canLaunchMagnet = false;
     //bool magnetLaunched = false;
     //Vector2 relativeFloatPos;
+
+    [Space]
+    [SerializeField] Achievement enterboatAchievement;
 
     Vector2 moveInput, lookInput;
 
@@ -64,13 +67,13 @@ public class BoatController : MonoBehaviour
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>(true);
         animator = boatPlayerVisual.GetComponent<Animator>();
 
-        //gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
+        gameManager.InputActions.Boat.LaunchMagnet.performed += LaunchMagnet;
         gameManager.InputActions.Boat.ExitBoat.performed += ExitBoat;
     }
 
     private void OnDestroy()
     {
-        //gameManager.InputActions.Boat.LaunchMagnet.performed -= LaunchMagnet;
+        gameManager.InputActions.Boat.LaunchMagnet.performed -= LaunchMagnet;
         gameManager.InputActions.Boat.ExitBoat.performed -= ExitBoat;
     }
 
@@ -135,28 +138,32 @@ public class BoatController : MonoBehaviour
         moveInput = gameManager.InputActions.Boat.Move.ReadValue<Vector2>();
         lookInput = gameManager.InputActions.Boat.Look.ReadValue<Vector2>();
 
-        //UpdateFishing();
+        UpdateFishing();
         Look();
+
+        animator.SetFloat("Speed", Mathf.Clamp01(moveInput.magnitude));
+        animator.SetFloat("Direction", moveInput.y >= 0 ? 1 : -1);
     }
 
-    //void UpdateFishing()
-    //{
-    //    if (magnetLaunched)
-    //    {
-    //        fishingPivot.LookAt(Utils.SetY(fishingFloat.transform.position, 0), Vector3.up);
+    void UpdateFishing()
+    {
+        //if (magnetLaunched)
+        //{
+        //    fishingPivot.LookAt(Utils.SetY(fishingFloat.transform.position, 0), Vector3.up);
 
-    //        relativeFloatPos = Utils.XZ(fishingFloat.transform.position - transform.position);
-    //        relativeFloatPos = Vector2.ClampMagnitude(relativeFloatPos, floatMaxDistance);
-    //        fishingFloat.transform.position = Utils.XyY(relativeFloatPos) + transform.position;
-    //    }
-    //    else
-    //    {
-    //        fishingPivot.rotation = Quaternion.Euler(0, camera.transform.rotation.eulerAngles.y, 0);
+        //    relativeFloatPos = Utils.XZ(fishingFloat.transform.position - transform.position);
+        //    relativeFloatPos = Vector2.ClampMagnitude(relativeFloatPos, floatMaxDistance);
+        //    fishingFloat.transform.position = Utils.XyY(relativeFloatPos) + transform.position;
+        //}
+        //else
+        //{
+            fishingPivot.transform.position = Utils.SetY(fishingPivot.transform.position, 0);
+            fishingPivot.rotation = Quaternion.Euler(0, camera.transform.rotation.eulerAngles.y, 0);
 
-    //        canLaunchMagnet = target.CanLaunch() && rb.linearVelocity.magnitude <= interactionMaxSpeed;
-    //        target.SetVisible(canLaunchMagnet);
-    //    }
-    //}
+            canLaunchMagnet = fishingHandler.CanLaunch() && rb.linearVelocity.magnitude <= interactionMaxSpeed;
+            target.SetVisible(canLaunchMagnet);
+        //}
+    }
 
     void Look()
     {
@@ -201,38 +208,43 @@ public class BoatController : MonoBehaviour
         return false;
     }
 
-    //private void LaunchMagnet(InputAction.CallbackContext context)
-    //{
-    //    if (magnetLaunched)
-    //    {
-    //        magnetLaunched = false;
-    //        fishingFloat.SetActive(false);
-    //    }
-    //    else if (canLaunchMagnet)
-    //    {
-    //        magnetLaunched = true;
-    //        target.SetVisible(false);
-    //        fishingFloat.SetActive(true);
-    //        fishingFloat.transform.position = target.transform.position;
-    //    }
-    //}
+    private void LaunchMagnet(InputAction.CallbackContext context)
+    {
+        //if (magnetLaunched)
+        //{
+        //    magnetLaunched = false;
+        //    fishingFloat.SetActive(false);
+        //}
+        if (canLaunchMagnet)
+        {
+            //magnetLaunched = true;
+            //target.SetVisible(false);
+            //fishingFloat.SetActive(true);
+            //fishingFloat.transform.position = target.transform.position;
+
+            StartCoroutine(Fishing());
+        }
+    }
 
     //void StartFishing()
     //{
     //    StartCoroutine(Fishing());
     //}
 
-    //IEnumerator Fishing()
-    //{
-    //    enabled = false;
-    //    rb.linearVelocity = Vector3.zero;
-    //    rb.angularVelocity = Vector3.zero;
+    IEnumerator Fishing()
+    {
+        enabled = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        animator.SetFloat("Speed", 0);
 
-    //    yield return StartCoroutine(fishingHandler.Fishing());
+        target.SetVisible(false);
 
-    //    enabled = true;
-    //    magnetLaunched = false;
-    //}
+        yield return StartCoroutine(fishingHandler.Fishing());
+
+        enabled = true;
+        //magnetLaunched = false;
+    }
 
     public void EnterBoat()
     {
@@ -242,6 +254,7 @@ public class BoatController : MonoBehaviour
         gameManager.player.EnterBoat();
         boatPlayerVisual.SetActive(true);
         hud.HideInteractionTooltip();
+        gameManager.UnlockAchievement(enterboatAchievement);
     }
 
     private void ExitBoat(InputAction.CallbackContext context)

@@ -8,6 +8,8 @@ public class ChBody : MonoBehaviour
 
     [SerializeField] float masse = 1;
 
+    [SerializeField] Achievement splashAchievement;
+
     private void Start()
     {
         gameManager = GameManager.Instance;
@@ -26,6 +28,8 @@ public class ChBody : MonoBehaviour
     {
         if (transform.position.y < -10)
         {
+            gameManager.UnlockAchievement(splashAchievement);
+
             Destroy(gameObject);
         }
     }

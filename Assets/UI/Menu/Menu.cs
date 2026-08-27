@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -24,8 +25,13 @@ public class Menu : MonoBehaviour
     [SerializeField] Slider mouseSensitivitySlider;
 
     [Space]
+    [SerializeField] TextMeshProUGUI moneyText;
     [SerializeField] Transform itemSlotGrid;
     [SerializeField] GameObject itemSlotButtonPrefab;
+
+    [Space]
+    [SerializeField] Transform achievementCardGrid;
+    [SerializeField] GameObject achievementCardPrefab;
 
 
     [Header("Modals")]
@@ -50,6 +56,7 @@ public class Menu : MonoBehaviour
 
         menu.SetActive(false);
         itemRecordModal.CloseModal();
+        SetTab(0);
     }
 
     private void OnDestroy()
@@ -57,29 +64,6 @@ public class Menu : MonoBehaviour
         gameManager.InputActions.Player.OpenMenu.performed -= OpenMenu;
         gameManager.InputActions.Boat.OpenMenu.performed -= OpenMenu;
         gameManager.InputActions.Menu.CloseMenu.performed -= CloseMenu;
-    }
-
-    private void Update()
-    {
-        //if (itemRecordModal.IsOpen)
-        //{
-        //    if (gameManager.InputActions.Menu.GrabItemVisual.ReadValue<float>() > 0)
-        //    {
-        //        Vector2 input = gameManager.InputActions.Menu.RotateItemVisual.ReadValue<Vector2>();
-        //        rotateItemVisualVelocity.x = -input.x * rotateItemVisualSpeed;
-        //        rotateItemVisualVelocity.y = input.y * rotateItemVisualSpeed;
-        //    }
-        //    else
-        //    {
-        //        rotateItemVisualVelocity *= 0.9f;
-        //    }
-
-        //    Vector3 rotation = shootingCamera.transform.eulerAngles;
-        //    rotation.y -= rotateItemVisualVelocity.x * Time.unscaledDeltaTime;
-        //    rotation.x -= rotateItemVisualVelocity.y * Time.unscaledDeltaTime;
-        //    rotation.x = Mathf.Clamp(Utils.Warp180(rotation.x), -90, 90);
-        //    shootingCamera.transform.rotation = Quaternion.Euler(rotation);
-        //}
     }
 
     private void OpenMenu(InputAction.CallbackContext context)
@@ -93,12 +77,22 @@ public class Menu : MonoBehaviour
         EnableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
         mouseSensitivitySlider.value = Mathf.Log(gameManager.GameSettings.mouseSensitivity, 2);
 
+        int money = gameManager.money;
+        float gramMass = gameManager.GetTotalGramMasse() / 1000f;
+        moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "{0:N0}\n{1:N3}", money, gramMass);
+
         List<Item> items = gameManager.Inventory.Keys.ToList();
         items.Sort((a, b) => gameManager.Inventory[a].registrationIndex - gameManager.Inventory[b].registrationIndex);
         foreach (Item item in items)
         {
             GameObject itemSlotButton = Instantiate(itemSlotButtonPrefab, itemSlotGrid);
             itemSlotButton.GetComponent<ItemSlotButton>().Init(this, item);
+        }
+
+        for (int i = gameManager.Achievements.Count - 1; i >= 0; i--)
+        {
+            GameObject achievementCard = Instantiate(achievementCardPrefab, achievementCardGrid);
+            achievementCard.GetComponent<AchievementCard>().Init(gameManager.Achievements[i]);
         }
 
         audioManager.PlayUI(UISound.Open);
@@ -123,10 +117,11 @@ public class Menu : MonoBehaviour
 
         if (itemRecordModal.IsOpen)
             itemRecordModal.CloseModal();
-            //CloseItemRecord();
 
         while (itemSlotGrid.childCount > 0)
             DestroyImmediate(itemSlotGrid.GetChild(0).gameObject);
+        while (achievementCardGrid.childCount > 0)
+            DestroyImmediate(achievementCardGrid.GetChild(0).gameObject);
 
         audioManager.PlayUI(UISound.Close);
     }
@@ -157,34 +152,4 @@ public class Menu : MonoBehaviour
     {
         gameManager.GameSettings.mouseSensitivity = Mathf.Pow(2, value);
     }
-
-    //public void OpenItemRecord(Item item, bool pauseGame)
-    //{
-    //    OpenItemRecord(item, pauseGame, gameManager.Inventory[item]);
-    //}
-
-    //public void OpenItemRecord(Item item, bool pauseGame, ItemSlot itemSlot)
-    //{
-    //    this.itemSlot = itemSlot;
-
-    //    itemRecordModal.OpenModal(pauseGame);
-
-    //    itemRecordNameInput.text = itemSlot.userName;
-    //    if (itemSlot.userName == "")
-    //        itemRecordNameInput.Select();
-
-    //    shootingCamera.StartShooting(item);
-    //}
-
-    //public void CloseItemRecord()
-    //{
-    //    itemRecordModal.CloseModal();
-
-    //    shootingCamera.EndShooting();
-    //}
-
-    //public void SetItemRecordName(string name)
-    //{
-    //    itemSlot.userName = name;
-    //}
 }

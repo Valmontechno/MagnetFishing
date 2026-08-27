@@ -35,12 +35,16 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] AudioResource ploufSound;
 
+    [Space]
+    [SerializeField] Achievement splashAchievement;
+
     Vector2 horizontalVelocity;
     float verticalVelocity;
     public Vector3 Velocity => new(horizontalVelocity.x, verticalVelocity, horizontalVelocity.y);
 
     bool drowning = false;
     Vector3 lastSecurePosition;
+    int drowningCount = 0;
 
     bool canLaunchMagnet = false;
 
@@ -188,6 +192,12 @@ public class PlayerController : MonoBehaviour
         verticalVelocity = 0;
 
         drowning = false;
+
+        drowningCount++;
+        if (drowningCount == 5)
+        {
+            gameManager.UnlockAchievement(splashAchievement);
+        }
     }
 
     private void Interact(InputAction.CallbackContext context)

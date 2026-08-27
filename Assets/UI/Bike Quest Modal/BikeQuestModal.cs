@@ -8,6 +8,7 @@ public class BikeQuestModal : Modal
     [SerializeField] Material obtainedMaterial;
     [SerializeField] Material notObtainedMaterial;
     [SerializeField] AudioResource obtainSound;
+    [SerializeField] Achievement bikeAchievement;
 
     public override void OpenModal()
     {
@@ -35,6 +36,13 @@ public class BikeQuestModal : Modal
         if (newPart != null)
         {
             AudioManager.Instance.PlayUI(obtainSound);
+
+            foreach (Item bikeItem in GameManager.Instance.bikeItems)
+            {
+                if (!GameManager.Instance.Inventory.ContainsKey(bikeItem))
+                    return;
+            }
+            GameManager.Instance.UnlockAchievement(bikeAchievement);
         }
     }
 

@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   masse: 1
+  splashAchievement: {fileID: 11400000, guid: 75f59648eb3fa7d479c8286fe4256e74, type: 2}
 --- !u!65 &9132689210955811784
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.14
+  m_Radius: 0.23
   m_Height: 0.8822607
   m_Direction: 1
   m_Center: {x: 0, y: 0.49636966, z: 0}

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,8 +11,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Sea sea;
     [HideInInspector] public PlayerController player;
     [HideInInspector] public Menu menu;
-
-    [HideInInspector] public SubmergedItem overlappedSubmergedItem = null;
 
     public event Action<bool> SubmergedItemVisibilityChanged;
 
@@ -29,8 +26,11 @@ public class GameManager : MonoBehaviour
     }
 
     public event Action OnInteractiveObjectChange;
+    public int Seed { get; private set; }
 
+    public int money;
     public Dictionary<Item, ItemSlot> Inventory { get; private set; }
+    public List<Achievement> Achievements { get; private set; }
     public GameSettings GameSettings { get; private set; }
 
     readonly bool[] pausedInputsState = new bool[3];
@@ -48,7 +48,10 @@ public class GameManager : MonoBehaviour
             InputActions = new();
 
             Inventory = new();
+            Achievements = new();
             GameSettings = new();
+
+            Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         }
         else
         {
@@ -125,5 +128,22 @@ public class GameManager : MonoBehaviour
     public void SetSubmergedItemVisibility(bool visible)
     {
         SubmergedItemVisibilityChanged?.Invoke(visible);
+    }
+
+    public void UnlockAchievement(Achievement achievement)
+    {
+        if (achievement == null || Achievements.Contains(achievement)) return;
+
+        Achievements.Add(achievement);
+    }
+
+    public int GetTotalGramMasse()
+    {
+        int gramMasse = 0;
+        foreach (Item item in Inventory.Keys)
+        {
+            gramMasse += item.gramMasse;
+        }
+        return gramMasse;
     }
 }

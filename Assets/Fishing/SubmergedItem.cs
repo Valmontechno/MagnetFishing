@@ -21,11 +21,6 @@ public class SubmergedItem : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (TryGetComponent(out Collider collider))
-        {
-            collider.isTrigger = true;
-        }
-
         GUIContent iconContent;
         if (item != null)
         {
@@ -68,22 +63,6 @@ public class SubmergedItem : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.Instance.SubmergedItemVisibilityChanged -= SetVisibility;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("FishingFloat") && GameManager.Instance.overlappedSubmergedItem == null)
-        {
-            GameManager.Instance.overlappedSubmergedItem = this;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("FishingFloat"))
-        {
-            GameManager.Instance.overlappedSubmergedItem = null;
-        }
     }
 
     public void Remove()

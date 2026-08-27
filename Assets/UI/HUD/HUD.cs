@@ -55,18 +55,7 @@ public class HUD : MonoBehaviour
 
     public void ToastMessage(string message)
     {
-        StartCoroutine(DisplayToastMessageRoutine(message));
-    }
-
-    IEnumerator DisplayToastMessageRoutine(string message)
-    {
         GameObject toastMessage = Instantiate(toastTextPrefab, toastMessageContainer);
         toastMessage.GetComponent<TextMeshProUGUI>().text = message;
-
-        Animation animation = toastMessage.GetComponent<Animation>();
-        yield return new WaitUntil(() => animation.isPlaying);
-        yield return new WaitUntil(() => !animation.isPlaying);
-
-        Destroy(toastMessage);
     }
 }

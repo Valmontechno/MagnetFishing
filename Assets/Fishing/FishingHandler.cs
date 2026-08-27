@@ -34,10 +34,15 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] AudioResource magnetSound;
     [SerializeField] AudioResource getItemSound;
 
+    [Space]
+    [SerializeField] LayerMask submergedItemLayer;
+    [SerializeField] Item[] firstItems;
+
     //public int collisionCount = 0;
     readonly HashSet<Collider> collisions = new();
 
     SubmergedItem submergedItem;
+    Item item;
     GameObject obstacle;
 
     private void Awake()
@@ -54,7 +59,9 @@ public class FishingHandler : MonoBehaviour
 
     Vector3 ToWorld3D(Vector2 pos, float y=0)
     {
-        return transform.TransformPoint(ToLocal3D(pos, y));
+        Vector3 position = transform.TransformPoint(ToLocal3D(pos));
+        position.y = y;
+        return position;
     }
 
     private void OnDrawGizmosSelected()
@@ -111,7 +118,22 @@ public class FishingHandler : MonoBehaviour
 
             yield return new WaitForSeconds(2);
 
-            submergedItem = gameManager.overlappedSubmergedItem;
+            submergedItem = null;
+            item = null;
+
+            if (Physics.Raycast(target.transform.position + Vector3.up, Vector3.down, out RaycastHit hit, 5, submergedItemLayer))
+            {
+                if (gameManager.Inventory.Count < firstItems.Length)
+                {
+                    item = firstItems[gameManager.Inventory.Count];
+                }
+                else
+                {
+                    submergedItem = hit.collider.GetComponent<SubmergedItem>();
+                    item = submergedItem.item;
+                }
+            }
+            
 
             fishingFloat.gameObject.SetActive(true);
             fishingFloat.transform.position = target.transform.position;
@@ -119,16 +141,21 @@ public class FishingHandler : MonoBehaviour
 
             audioManager.PlaySFXAt(ploufSound, fishingFloat.transform.position);
 
-            if (submergedItem != null)
+            if (item != null)
             {
-                fishingFloat.factor = submergedItem.item.masse / MagnetController.refMasse;
-                magnet2D.StartFishing(submergedItem.item.masse);
+                fishingFloat.factor = item.masse / MagnetController.refMasse;
+                magnet2D.StartFishing(item.masse);
 
 
                 yield return new WaitForSeconds(1);
 
-                if (submergedItem.item.obstacle != null)
-                    obstacle = Instantiate(gameManager.overlappedSubmergedItem.item.obstacle);
+                if (item.obstacle != null)
+                {
+                    obstacle = Instantiate(item.obstacle);
+                    System.Random random = new(gameManager.Seed + item.GetEntityId());
+                    if (random.NextDouble() > 0.5)
+                        obstacle.transform.localScale = new Vector3(-1, 1, 1);
+                }
 
                 audioManager.PlaySFXAt(magnetSound, fishingFloat.transform.position);
             }
@@ -165,10 +192,8 @@ public class FishingHandler : MonoBehaviour
             {
                 audioManager.PlaySFXAt(bigPloufSound, fishingFloat.transform.position);
 
-                Item item = null;
                 if (submergedItem != null)
                 {
-                    item = submergedItem.item;
                     submergedItem.Remove();
                 }
 
@@ -178,6 +203,8 @@ public class FishingHandler : MonoBehaviour
                 {
                     gameManager.ShowMouse();
                     audioManager.PlayUI(getItemSound);
+
+                    gameManager.money += item.gramMasse;
 
                     ItemSlot itemSlot = new(gameManager.Inventory.Count);
                     menu.itemRecordModal.OpenModal(item, itemSlot);
@@ -202,21 +229,15 @@ public class FishingHandler : MonoBehaviour
 
     private void Update()
     {
-        fishingFloat.transform.position = ToWorld3D(magnet2D.transform.position, fishingFloat.transform.localPosition.y);
+        fishingFloat.transform.position = ToWorld3D(magnet2D.transform.position, fishingFloat.transform.position.y);
         powerBar.position = Camera.main.WorldToScreenPoint(fishingFloat.transform.position);
 
         lineRenderer.SetPosition(0, fishingFloat.transform.position);
         lineRenderer.SetPosition(1, ropeOrigin.position + Vector3.up * 1);
     }
 
-    public bool CanFish()
-    {
-        return CanLaunch() && GameManager.Instance.overlappedSubmergedItem != null;
-    }
-
     public bool CanLaunch()
     {
-        //return collisionCount == 0;
         return collisions.Count == 0;
     }
 }
