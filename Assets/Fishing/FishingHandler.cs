@@ -36,13 +36,14 @@ public class FishingHandler : MonoBehaviour
 
     [Space]
     [SerializeField] LayerMask submergedItemLayer;
-    [SerializeField] Item[] firstItems;
+    [SerializeField] SubmergedItem[] firstSubmergedItems;
 
     //public int collisionCount = 0;
     readonly HashSet<Collider> collisions = new();
 
     SubmergedItem submergedItem;
     Item item;
+    Item originalItem;
     GameObject obstacle;
 
     private void Awake()
@@ -120,16 +121,18 @@ public class FishingHandler : MonoBehaviour
 
             submergedItem = null;
             item = null;
+            originalItem = null;
 
-            if (Physics.Raycast(target.transform.position + Vector3.up, Vector3.down, out RaycastHit hit, 5, submergedItemLayer))
+            if (Physics.Raycast(target.transform.position + Vector3.up * 20, Vector3.down, out RaycastHit hit, 30, submergedItemLayer))
             {
-                if (gameManager.Inventory.Count < firstItems.Length)
+                submergedItem = hit.collider.GetComponent<SubmergedItem>();
+                originalItem = submergedItem.item;
+                if (gameManager.Inventory.Count < firstSubmergedItems.Length)
                 {
-                    item = firstItems[gameManager.Inventory.Count];
+                    item = firstSubmergedItems[gameManager.Inventory.Count].item;
                 }
                 else
                 {
-                    submergedItem = hit.collider.GetComponent<SubmergedItem>();
                     item = submergedItem.item;
                 }
             }
@@ -191,6 +194,11 @@ public class FishingHandler : MonoBehaviour
             if (magnet2D.CurrentState == MagnetController.State.Success)
             {
                 audioManager.PlaySFXAt(bigPloufSound, fishingFloat.transform.position);
+
+                if (gameManager.Inventory.Count < firstSubmergedItems.Length)
+                {
+                    firstSubmergedItems[gameManager.Inventory.Count].item = originalItem;
+                }
 
                 if (submergedItem != null)
                 {

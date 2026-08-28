@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     AudioManager audioManager;
     CharacterController characterController;
     Animator animator;
+    TrailRenderer trailRenderer;
     FishingHandler fishingHandler;
     CinemachineInputAxisController cinemachineInputAxisController;
     CinemachineOrbitalFollow orbitalFollow;
@@ -33,6 +34,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float decel;
     [SerializeField] float gravity;
     [SerializeField] float visualRotationSpeed;
+
+    [Space]
+    [SerializeField] float trailDuration;
+    [SerializeField] float trailSpeed;
 
     [Space]
     [SerializeField] AudioResource ploufSound;
@@ -59,6 +64,7 @@ public class PlayerController : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
         animator = visual.GetComponent<Animator>();
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
         fishingHandler = fishingPivot.GetComponentInChildren<FishingHandler>();
         cinemachineInputAxisController = camera.GetComponent<CinemachineInputAxisController>();
         orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
@@ -160,6 +166,8 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 1);
         else
             animator.SetFloat("Speed", 2);
+
+        trailRenderer.time = Mathf.MoveTowards(trailRenderer.time, isRunning ? trailDuration : 0, trailSpeed * Time.deltaTime);
     }
 
     private void Run(InputAction.CallbackContext context)
@@ -194,6 +202,12 @@ public class PlayerController : MonoBehaviour
     {
         drowning = true;
 
+        drowningCount++;
+        if (drowningCount == 3)
+        {
+            gameManager.UnlockAchievement(splashAchievement);
+        }
+
         gameManager.InputActions.Player.Disable();
         camera.enabled = false;
 
@@ -212,12 +226,6 @@ public class PlayerController : MonoBehaviour
         verticalVelocity = 0;
 
         drowning = false;
-
-        drowningCount++;
-        if (drowningCount == 5)
-        {
-            gameManager.UnlockAchievement(splashAchievement);
-        }
     }
 
     private void Interact(InputAction.CallbackContext context)

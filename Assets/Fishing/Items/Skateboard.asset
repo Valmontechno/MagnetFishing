@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Skateboard
-  obstacle: {fileID: 4744532286807182270, guid: 273f16913600155488c349a79de7edcb, type: 3}
+  obstacle: {fileID: 5237645110253898922, guid: 2e3e630c1b64ef44bab3d0466601f35b, type: 3}
   masse: 2
   gramMasse: 2891

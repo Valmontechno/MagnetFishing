@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Boulon
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 2283964955421747080, guid: 982da29065000f740a49a96470272eca, type: 3}
   masse: 1
   gramMasse: 18

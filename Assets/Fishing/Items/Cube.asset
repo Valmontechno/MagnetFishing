@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Cube de compagnie
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 4298387096967862197, guid: 4fb138a68d1994b48acf82fff791050c, type: 3}
   masse: 1
   gramMasse: 5000

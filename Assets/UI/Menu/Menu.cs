@@ -21,8 +21,9 @@ public class Menu : MonoBehaviour
     [SerializeField] Tab[] tabs;
 
     [Space]
-    [SerializeField] Toggle EnableScrollToggle;
+    [SerializeField] Toggle enableScrollToggle;
     [SerializeField] Slider mouseSensitivitySlider;
+    [Multiline, SerializeField] string enableScrollMessage;
 
     [Space]
     [SerializeField] TextMeshProUGUI moneyText;
@@ -32,6 +33,7 @@ public class Menu : MonoBehaviour
     [Space]
     [SerializeField] Transform achievementCardGrid;
     [SerializeField] GameObject achievementCardPrefab;
+    [ReorderableList] [SerializeField] Achievement[] achievements;
 
 
     [Header("Modals")]
@@ -82,7 +84,7 @@ public class Menu : MonoBehaviour
         gameManager.ShowMouse();
         hud.gameObject.SetActive(false);
 
-        EnableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
+        enableScrollToggle.isOn = gameManager.GameSettings.scrollEnabled;
         mouseSensitivitySlider.value = Mathf.Log(gameManager.GameSettings.mouseSensitivity, 2);
 
         int money = gameManager.money;
@@ -90,17 +92,17 @@ public class Menu : MonoBehaviour
         moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "{0:N0}\n{1:N3}", money, gramMass);
 
         List<Item> items = gameManager.Inventory.Keys.ToList();
-        items.Sort((a, b) => gameManager.Inventory[a].registrationIndex - gameManager.Inventory[b].registrationIndex);
+        items.Sort((a, b) => gameManager.Inventory[b].registrationIndex - gameManager.Inventory[a].registrationIndex);
         foreach (Item item in items)
         {
             GameObject itemSlotButton = Instantiate(itemSlotButtonPrefab, itemSlotGrid);
             itemSlotButton.GetComponent<ItemSlotButton>().Init(this, item);
         }
 
-        for (int i = gameManager.Achievements.Count - 1; i >= 0; i--)
+        foreach (Achievement achievement in achievements)
         {
             GameObject achievementCard = Instantiate(achievementCardPrefab, achievementCardGrid);
-            achievementCard.GetComponent<AchievementCard>().Init(gameManager.Achievements[i]);
+            achievementCard.GetComponent<AchievementCard>().Init(achievement, gameManager.Achievements.Contains(achievement));
         }
 
         audioManager.PlayUI(UISound.Open);
@@ -125,6 +127,10 @@ public class Menu : MonoBehaviour
 
         if (itemRecordModal.IsOpen)
             itemRecordModal.CloseModal();
+        if (alertModal.IsOpen)
+            alertModal.CloseModal();
+
+        Debug.Assert(openModalCount == 0);
 
         while (itemSlotGrid.childCount > 0)
             DestroyImmediate(itemSlotGrid.GetChild(0).gameObject);
@@ -154,6 +160,11 @@ public class Menu : MonoBehaviour
     {
         audioManager.PlayUI(UISound.Click);
         gameManager.GameSettings.scrollEnabled = enabled;
+
+        if (enabled)
+        {
+            Alert(enableScrollMessage, false);
+        }
     }
 
     public void SetMouseSensitivity(float value)

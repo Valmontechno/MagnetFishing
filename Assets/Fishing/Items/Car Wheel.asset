@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   recenter: 1
   itemName: Roue de voiture
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 551091498665984186, guid: 3284f277c67633b48a6776498beeefed, type: 3}
   masse: 1
   gramMasse: 9221

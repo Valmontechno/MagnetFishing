@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
   recenter: 1
   itemName: Cadenas
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 4946239695379182659, guid: a189f90121d636e48be41cbee09cbb78, type: 3}
   masse: 1
   gramMasse: 121

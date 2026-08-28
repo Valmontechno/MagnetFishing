@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 1}
   recenter: 1
   itemName: "\xC9cran"
-  obstacle: {fileID: 0}
-  masse: 1
+  obstacle: {fileID: 6499728428793817801, guid: 15ba460979e932b47b17e09b535eaebb, type: 3}
+  masse: 3
   gramMasse: 2851

@@ -109,6 +109,10 @@ public class MagnetController : MonoBehaviour
         CurrentState = State.Fishing;
 
         this.masse = masse;
+        if (gameManager.GameState.Contains("has-super-magnet"))
+            this.masse = this.masse / 2;
+        this.masse = Mathf.Max(this.masse, 1);
+
         power = maxPower;
         groundColliders.Clear();
 

@@ -54,23 +54,26 @@ public class ShopItemButton : MonoBehaviour
 
     public void Buy()
     {
-        if (gameManager.money < shopItem.cost)
+        if (!gameManager.GameState.Contains(shopItem.state))
         {
-            AudioManager.Instance.PlayUI(UISound.Error);
-        }
-        else
-        {
-            gameManager.money -= shopItem.cost;
-            gameManager.GameState.Add(shopItem.state);
-            shopItem.action?.Invoke();
-
-            UpdateButton();
-            AudioManager.Instance.PlayUI(buySound);
-
-            if (shopItem.message != "")
+            if (gameManager.money < shopItem.cost)
             {
-                gameManager.menu.Alert(shopItem.message);
+                AudioManager.Instance.PlayUI(UISound.Error);
             }
+            else
+            {
+                gameManager.money -= shopItem.cost;
+                gameManager.GameState.Add(shopItem.state);
+                shopItem.action?.Invoke();
+
+                UpdateButton();
+                AudioManager.Instance.PlayUI(buySound);
+            }
+        }
+
+        if (gameManager.GameState.Contains(shopItem.state) && shopItem.message != "")
+        {
+            gameManager.menu.Alert(shopItem.message);
         }
     }
 }

@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: "C\xE2bles"
-  obstacle: {fileID: 4744532286807182270, guid: 561e295236f076f4093495f1be03f41b, type: 3}
+  obstacle: {fileID: 1543396327010695771, guid: f75fd1c1e87897748b0aaf82e8e676ee, type: 3}
   masse: 1
   gramMasse: 19

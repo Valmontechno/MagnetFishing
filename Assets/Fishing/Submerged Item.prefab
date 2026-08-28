@@ -4855,7 +4855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5124695281684127035}
   - component: {fileID: 7163916394665503147}
-  - component: {fileID: 8293050753284968484}
+  - component: {fileID: 4688652210571117599}
   m_Layer: 12
   m_Name: null
   m_TagString: Untagged
@@ -4892,8 +4892,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubmergedItem
   item: {fileID: 0}
---- !u!65 &8293050753284968484
-BoxCollider:
+  randomOffset: 3
+--- !u!135 &4688652210571117599
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4911,5 +4912,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 1, z: 10}
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}

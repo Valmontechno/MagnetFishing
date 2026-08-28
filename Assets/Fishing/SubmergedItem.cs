@@ -8,6 +8,8 @@ public class SubmergedItem : MonoBehaviour
     [DynamicHelp(nameof(GetHelpMessage), UnityMessageType.None)]
     public Item item;
 
+    [SerializeField] float randomOffset;
+
     string GetHelpMessage()
     {
         if (item != null)
@@ -21,6 +23,36 @@ public class SubmergedItem : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        //GUIContent iconContent;
+        //if (item != null)
+        //{
+        //    iconContent = UnityEditor.EditorGUIUtility.IconContent(item.obstacle != null ? "sv_label_1" : "sv_label_4");
+        //    gameObject.name = item.name;
+        //}
+        //else
+        //{
+        //    iconContent = UnityEditor.EditorGUIUtility.IconContent("sv_label_6");
+        //    gameObject.name = "null";
+        //}
+        //UnityEditor.EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
+    }
+#endif
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.matrix = transform.localToWorldMatrix * Matrix4x4.Translate(Vector3.up * 0.5f) * Matrix4x4.Scale(new Vector3(1, 0, 1));
+
+        if (TryGetComponent(out BoxCollider box) && box.enabled)
+        {
+            Gizmos.DrawWireCube(box.center, box.size);
+        }
+        else if (TryGetComponent(out SphereCollider sphere) && sphere.enabled)
+        {
+            Gizmos.DrawWireSphere(sphere.center, sphere.radius);
+        }
+
+#if UNITY_EDITOR
         GUIContent iconContent;
         if (item != null)
         {
@@ -33,18 +65,7 @@ public class SubmergedItem : MonoBehaviour
             gameObject.name = "null";
         }
         UnityEditor.EditorGUIUtility.SetIconForObject(gameObject, (Texture2D)iconContent.image);
-    }
 #endif
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.matrix = transform.localToWorldMatrix;
-
-        if (TryGetComponent(out BoxCollider box))
-        {
-            Gizmos.DrawWireCube(box.center, box.size);
-        }
     }
 
     private void Start()
@@ -57,6 +78,8 @@ public class SubmergedItem : MonoBehaviour
         {
             particleSystem = GetComponentInChildren<ParticleSystem>();
             GameManager.Instance.SubmergedItemVisibilityChanged += SetVisibility;
+
+            transform.position += Utils.XyY(Random.insideUnitCircle * randomOffset, 0);
         }
     }
 

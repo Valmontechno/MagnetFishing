@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 1}
   recenter: 1
   itemName: Microondes
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 3191835775113774265, guid: e36932fd1d7506949bf3b47906b2ce9f, type: 3}
   masse: 1
   gramMasse: 15250

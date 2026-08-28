@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 0
   itemName: "Chaine de v\xE9lo"
-  obstacle: {fileID: 1113464416229615483, guid: bc0f42625a822bf49a774704843f0041, type: 3}
+  obstacle: {fileID: 4744532286807182270, guid: 561e295236f076f4093495f1be03f41b, type: 3}
   masse: 1
   gramMasse: 367

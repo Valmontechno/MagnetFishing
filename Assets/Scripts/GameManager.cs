@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour
         if (achievement == null || Achievements.Contains(achievement)) return;
 
         Achievements.Add(achievement);
+        hud.UnlockAchievement(achievement);
     }
 
     public int GetTotalGramMasse()

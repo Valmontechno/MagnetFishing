@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Engrenage
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 8689276593883094473, guid: d081d54e3ac3897459df397c877ab128, type: 3}
   masse: 1
   gramMasse: 3796

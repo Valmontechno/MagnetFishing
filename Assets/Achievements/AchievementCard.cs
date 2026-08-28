@@ -1,14 +1,25 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AchievementCard : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI titleText;
-    [SerializeField] TextMeshProUGUI descriptionText;
+    [SerializeField] Image image;
 
-    public void Init(Achievement achievement)
+    public void Init(Achievement achievement, bool uncloked)
     {
-        titleText.text = achievement.title;
-        descriptionText.text = achievement.description;
+        image.sprite = achievement.icon;
+
+        if (uncloked)
+        {
+            titleText.text = $"<size=18><b>{achievement.title}</b></size><size=8>\n\n</size>{achievement.description}";
+        }
+        else
+        {
+            titleText.text = "<size=18><b>???</b></size><size=8>";
+            image.color = Color.black;
+        }
+    
     }
 }

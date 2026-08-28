@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   recenter: 1
   itemName: Caddie
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 5365816295535936752, guid: 04d3b25e460e91341be3aa6877853946, type: 3}
   masse: 1
   gramMasse: 8234

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - FishingFloat
+  - Ball
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - CanLand
   - CannotLand
   - SubmergedItem
-  - 
+  - PhysicWall
   - 
   - 
   - 

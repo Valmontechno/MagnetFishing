@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 3844816d614503a45a5c0323602143fe
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - splashAchievement: {instanceID: 0}
+  - splashSound: {fileID: 6418180475301049370, guid: 8a4c097cbe04db14dbf91f3e614aade2, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

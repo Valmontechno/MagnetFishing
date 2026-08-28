@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Structure
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 2088341565515705770, guid: 780af7519e0fb764aaef65964540383c, type: 3}
   masse: 1
   gramMasse: 3848

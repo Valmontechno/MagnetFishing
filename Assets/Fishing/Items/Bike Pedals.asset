@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 0
   itemName: "P\xE9dalier de v\xE9lo"
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 5546611273999245365, guid: fa5cdb099b8bdc547a08c2d668b15c6d, type: 3}
   masse: 1
   gramMasse: 757

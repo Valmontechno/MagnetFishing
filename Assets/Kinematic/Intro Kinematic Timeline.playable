@@ -1875,7 +1875,7 @@ MonoBehaviour:
   m_Name: Recorded
   m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.AnimationPlayableAsset
   m_Clip: {fileID: -1450267415305806901}
-  m_Position: {x: 468.73, y: 1.04, z: 452.17}
+  m_Position: {x: 468.73, y: 1.04, z: 444}
   m_EulerAngles: {x: -0, y: 90, z: 0}
   m_UseTrackMatchFields: 1
   m_MatchTargetFields: 63

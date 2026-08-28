@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class HUD : MonoBehaviour
 {
@@ -12,11 +13,16 @@ public class HUD : MonoBehaviour
     [SerializeField] GameObject launchMagnetTooltip;
     [SerializeField] Transform toastMessageContainer;
     [SerializeField] GameObject toastTextPrefab;
+    [SerializeField] AudioResource achievementSound;
+    [SerializeField] Animation achievementAnimation;
+    AchievementCard achievementCard;
 
     private void Awake()
     {
         gameManager = GameManager.Instance;
         gameManager.hud = this;
+
+        achievementCard = achievementAnimation.GetComponentInChildren<AchievementCard>();
 
         gameManager.OnInteractiveObjectChange += OnInteractiveObjectChange;
     }
@@ -58,5 +64,13 @@ public class HUD : MonoBehaviour
     {
         GameObject toastMessage = Instantiate(toastTextPrefab, toastMessageContainer);
         toastMessage.GetComponent<TextMeshProUGUI>().text = message;
+    }
+
+    public void UnlockAchievement(Achievement achievement)
+    {
+        achievementCard.Init(achievement, true);
+        achievementAnimation.Stop();
+        achievementAnimation.Play();
+        AudioManager.Instance.PlayUI(achievementSound);
     }
 }

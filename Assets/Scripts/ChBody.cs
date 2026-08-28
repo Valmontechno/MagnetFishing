@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 [RequireComponent(typeof(Rigidbody))]
 public class ChBody : MonoBehaviour
@@ -6,14 +7,24 @@ public class ChBody : MonoBehaviour
     GameManager gameManager;
     Rigidbody rb;
 
+    [SerializeField] bool respawn;
     [SerializeField] float masse = 1;
 
     [SerializeField] Achievement splashAchievement;
+    [SerializeField] AudioResource splashSound;
+
+    Vector3 spawnPosition;
+    Quaternion spawnRotation;
+
+    bool isFall = false;
 
     private void Start()
     {
         gameManager = GameManager.Instance;
         rb = GetComponent<Rigidbody>();
+
+        spawnPosition = transform.position;
+        spawnRotation = transform.rotation;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -26,11 +37,34 @@ public class ChBody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (transform.position.y < -10)
+        if (transform.position.y < 0)
         {
-            gameManager.UnlockAchievement(splashAchievement);
+            if (!isFall)
+            {
+                gameManager.sea.GenerateRipple(Utils.XZ(transform.position), 1);
+                AudioManager.Instance.PlaySFXAt(splashSound, transform.position);
 
-            Destroy(gameObject);
+                isFall = true;
+            }
+
+            if (transform.position.y < -10)
+            {
+                if (respawn)
+                {
+                    transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+
+                    isFall = false;
+                }
+                else
+                {
+                    gameManager.UnlockAchievement(splashAchievement);
+
+                    Destroy(gameObject);
+                }
+            }
         }
     }
 }

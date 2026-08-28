@@ -4,6 +4,9 @@ using UnityEngine;
 public class Achievement : ScriptableObject
 {
     public string title;
-    [ScriptableObjectIcon] public Sprite icon;
+#if UNITY_EDITOR
+    [ScriptableObjectIcon]
+#endif
+    public Sprite icon;
     [Multiline] public string description;
 }

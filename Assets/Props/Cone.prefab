@@ -90,8 +90,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3844816d614503a45a5c0323602143fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  masse: 1
+  respawn: 0
+  masse: 0.5
   splashAchievement: {fileID: 11400000, guid: 75f59648eb3fa7d479c8286fe4256e74, type: 2}
+  splashSound: {fileID: 6418180475301049370, guid: 8a4c097cbe04db14dbf91f3e614aade2, type: 2}
 --- !u!65 &9132689210955811784
 BoxCollider:
   m_ObjectHideFlags: 0

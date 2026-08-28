@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
   itemName: Grenade
-  obstacle: {fileID: 0}
+  obstacle: {fileID: 565421965626844102, guid: 8ba3878fee15ecd4c9c4a691291d9e42, type: 3}
   masse: 3
   gramMasse: 418
