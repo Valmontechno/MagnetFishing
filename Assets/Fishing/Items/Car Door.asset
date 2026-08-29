@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: "Porti\xE8re"
   obstacle: {fileID: 4744532286807182270, guid: 273f16913600155488c349a79de7edcb, type: 3}
-  masse: 1
+  masse: 6
   gramMasse: 34717

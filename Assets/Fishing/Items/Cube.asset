@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Cube de compagnie
   obstacle: {fileID: 4298387096967862197, guid: 4fb138a68d1994b48acf82fff791050c, type: 3}
-  masse: 1
+  masse: 6
   gramMasse: 5000

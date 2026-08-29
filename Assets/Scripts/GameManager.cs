@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
 
     public Item[] bikeItems;
 
+    public int itemCount;
+
 
     private void Awake()
     {
@@ -67,15 +69,15 @@ public class GameManager : MonoBehaviour
         HideMouse();
     }
 
-#if !UNITY_EDITOR
-    void OnGUI()
-    {
-        GUI.Label(
-            new Rect(10, 10, 300, 30),
-            $"FPS: {(1f / Time.unscaledDeltaTime):F0}"
-        );
-    }
-#endif
+//#if !UNITY_EDITOR
+//    void OnGUI()
+//    {
+//        GUI.Label(
+//            new Rect(10, 10, 300, 30),
+//            $"FPS: {(1f / Time.unscaledDeltaTime):F0}"
+//        );
+//    }
+//#endif
 
     public void PauseGame()
     {

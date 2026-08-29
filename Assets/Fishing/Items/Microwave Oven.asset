@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Microondes
   obstacle: {fileID: 3191835775113774265, guid: e36932fd1d7506949bf3b47906b2ce9f, type: 3}
-  masse: 1
+  masse: 5
   gramMasse: 15250

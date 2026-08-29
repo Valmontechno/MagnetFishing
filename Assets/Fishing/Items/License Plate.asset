@@ -16,7 +16,7 @@ MonoBehaviour:
   visual: {fileID: 3364188322110366073, guid: ce91069bda1d6a240aa6b62f1c14722a, type: 3}
   rotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   recenter: 1
-  itemName: Boulon
+  itemName: Plaque d'immatriculation
   obstacle: {fileID: 802749036270948389, guid: bf65bc07b0260744192d864df4bc750e, type: 3}
   masse: 1
   gramMasse: 259

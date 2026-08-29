@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 0
   itemName: "Roue de v\xE9lo"
   obstacle: {fileID: 1932830736687638097, guid: 324838caccb65a44e8fd1add1b965f81, type: 3}
-  masse: 1
+  masse: 1.5
   gramMasse: 1079

@@ -17,7 +17,6 @@ public class ShopItemButton : MonoBehaviour
     [SerializeField] Image image;
 
     [Space]
-    [SerializeField] Color costColor;
     [SerializeField] string boughtMessage;
     [SerializeField] AudioResource buySound;
 
@@ -48,7 +47,7 @@ public class ShopItemButton : MonoBehaviour
         }
         else
         {
-            costText.text = $"{shopItem.cost} <color=#{ColorUtility.ToHtmlStringRGB(costColor)}>¤</color>";
+            costText.text = $"{shopItem.cost} <color=#{ColorUtility.ToHtmlStringRGB(shopModal.costColor)}>¤</color>";
         }
     }
 
@@ -67,6 +66,7 @@ public class ShopItemButton : MonoBehaviour
                 shopItem.action?.Invoke();
 
                 UpdateButton();
+                shopModal.UpdateShop();
                 AudioManager.Instance.PlayUI(buySound);
             }
         }

@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,9 +18,11 @@ public class ShopModal : Modal
 
     [SerializeField] Transform shopItemGrid;
     [SerializeField] GameObject shopItemButtonPrefab;
+    [SerializeField] TextMeshProUGUI moneyText;
+    public Color costColor;
     [SerializeField] GameObject boat;
 
-    [SerializeField] ShopItem[] shopItems;
+    [ReorderableList] public ShopItem[] shopItems;
 
     public override void OpenModal()
     {
@@ -34,6 +37,8 @@ public class ShopModal : Modal
             ShopItemButton button = Instantiate(shopItemButtonPrefab, shopItemGrid).GetComponent<ShopItemButton>();
             button.Init(this, shopItem);
         }
+
+        UpdateShop();
     }
 
     public override void CloseModal()
@@ -41,6 +46,11 @@ public class ShopModal : Modal
         base.CloseModal();
 
         GameManager.Instance.HideMouse();
+    }
+
+    public void UpdateShop()
+    {
+        moneyText.text = $"{GameManager.Instance.money} <color=#{ColorUtility.ToHtmlStringRGB(costColor)}>¤</color>";
     }
 
     public void UnlockBoat()

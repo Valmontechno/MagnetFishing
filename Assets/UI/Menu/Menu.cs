@@ -39,7 +39,10 @@ public class Menu : MonoBehaviour
     [Header("Modals")]
     public ItemRecordModal itemRecordModal;
     public BikeQuestModal bikeQuestModal;
-    [SerializeField] AlertModal alertModal;
+    public ShopModal shopModal;
+    public AlertModal alertModal;
+    public DialogModal dialogModal;
+    public Modal creditsModal;
     public int openModalCount = 0;
 
 
@@ -89,7 +92,7 @@ public class Menu : MonoBehaviour
 
         int money = gameManager.money;
         float gramMass = gameManager.GetTotalGramMasse() / 1000f;
-        moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "{0:N0}\n{1:N3}", money, gramMass);
+        moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "{0:N0}\n{1:N3}\n{2:N0}", money, gramMass, gameManager.Inventory.Count);
 
         List<Item> items = gameManager.Inventory.Keys.ToList();
         items.Sort((a, b) => gameManager.Inventory[b].registrationIndex - gameManager.Inventory[a].registrationIndex);

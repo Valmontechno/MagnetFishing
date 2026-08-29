@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class ShootingCamera : MonoBehaviour
 {
     [EditorButton(nameof(TakeScreenshot))]
     [SerializeField] Quaternion defaultRotation;
+    //[SerializeField] Material rustMaterial;
 
     GameObject itemGO;
 
@@ -35,6 +37,15 @@ public class ShootingCamera : MonoBehaviour
             foreach (Renderer renderer in itemGO.GetComponentsInChildren<Renderer>())
             {
                 renderer.gameObject.layer = LayerMask.NameToLayer("ItemShooting");
+
+                //Material[] materials = renderer.materials;
+
+                //for (int i = 0; i < materials.Length; i++)
+                //{
+                //    materials[i] = rustMaterial;
+                //}
+
+                //renderer.materials = materials;
             }
         }
     }

@@ -16,7 +16,7 @@ MonoBehaviour:
   visual: {fileID: 919132149155446097, guid: dfa196a34bbc16b44bd639f57ee713e9, type: 3}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   recenter: 1
-  itemName: Boulon
+  itemName: Canette
   obstacle: {fileID: 2283964955421747080, guid: 982da29065000f740a49a96470272eca, type: 3}
   masse: 1
   gramMasse: 18

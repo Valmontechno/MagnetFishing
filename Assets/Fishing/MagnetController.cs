@@ -104,7 +104,7 @@ public class MagnetController : MonoBehaviour
         soundVolumeTarget = 0;
     }
 
-    public void StartFishing(float masse)
+    public void InitFishing(float masse)
     {
         CurrentState = State.Fishing;
 
@@ -118,6 +118,10 @@ public class MagnetController : MonoBehaviour
 
         //powerBar.SetActive(true);
         fishingHUD.SetActive(true);
+    }
+
+    public void StartFishing()
+    {
         gameObject.SetActive(true);
 
         audioSource.Play();

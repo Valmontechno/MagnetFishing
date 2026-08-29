@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Engrenage
   obstacle: {fileID: 8689276593883094473, guid: d081d54e3ac3897459df397c877ab128, type: 3}
-  masse: 1
+  masse: 3
   gramMasse: 3796

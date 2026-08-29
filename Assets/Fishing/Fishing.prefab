@@ -58,15 +58,29 @@ MonoBehaviour:
   hud: {fileID: 0}
   powerBar: {fileID: 0}
   ropeOrigin: {fileID: 0}
+  keyItem: {fileID: 11400000, guid: 6ad6a179688ae3d4da2f16f408220b55, type: 2}
+  chestItem: {fileID: 11400000, guid: bdca3962c6e785c4892a721e97d37d61, type: 2}
+  chestAchievement: {fileID: 11400000, guid: ebada7e981b74c44daf692a10b074177, type: 2}
+  chestContentItem: {fileID: 11400000, guid: 389dc076e1f7d2144aeedf86af007856, type: 2}
   noItemMessage: Il n'y a rien ici
+  tooHeavyMessage: Trop lourd
+  featuredShopMessage: "Vous avez accumul\xE9 pas mal d'argent <color=#CBAB00>\xA4</color>.\nPensez
+    \xE0 faire un tour \xE0 la boutique."
+  keyMessage: "Cette cl\xE9 doit bien ouvrir quelque chose..."
+  chestMessage: "Impossible d'ouvrir le coffre. Il vous faudrait une cl\xE9."
+  openChestMessage: "Vous ouvrez le coffre avec la petite cl\xE9."
+  endGameMessage: "F\xE9licitations !\nVous avez trouv\xE9 tous les objets !\n\r\nMerci
+    d'avoir jou\xE9."
   ploufSound: {fileID: 6418180475301049370, guid: 8a4c097cbe04db14dbf91f3e614aade2, type: 2}
   bigPloufSound: {fileID: 6418180475301049370, guid: cef4ac062d2b948409467c65aa3fdb08, type: 2}
   magnetSound: {fileID: 6418180475301049370, guid: 6a2f1ab5690bd9d4d8ae9ba4a5ee66df, type: 2}
   getItemSound: {fileID: 8300000, guid: 2383117569875ad4f906162ae14ede78, type: 3}
+  getChestContentSound: {fileID: 8300000, guid: a93dfd8254fe20646821963559ef1df6, type: 3}
+  endGameSound: {fileID: 8300000, guid: 7d410923a3ab24941b8f002d0471ceee, type: 3}
   submergedItemLayer:
     serializedVersion: 2
     m_Bits: 4096
-  firstItems: []
+  firstSubmergedItems: []
 --- !u!65 &7465311484870605314
 BoxCollider:
   m_ObjectHideFlags: 0

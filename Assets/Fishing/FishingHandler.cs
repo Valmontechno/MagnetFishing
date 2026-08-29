@@ -26,17 +26,33 @@ public class FishingHandler : MonoBehaviour
     [SerializeField] HUD hud;
     [SerializeField] Transform powerBar;
     [SerializeField] Transform ropeOrigin;
+
+    [Space]
+    [SerializeField] Item keyItem;
+    [SerializeField] Item chestItem;
+    [SerializeField] Achievement chestAchievement;
+    [SerializeField] Item chestContentItem;
+
+    [Space]
     [SerializeField] string noItemMessage;
+    [SerializeField] string tooHeavyMessage;
+    [Multiline, SerializeField] string featuredShopMessage;
+    [Multiline, SerializeField] string keyMessage;
+    [Multiline, SerializeField] string chestMessage;
+    [Multiline, SerializeField] string openChestMessage;
+    [Multiline, SerializeField] string endGameMessage;
 
     [Space]
     [SerializeField] AudioResource ploufSound;
     [SerializeField] AudioResource bigPloufSound;
     [SerializeField] AudioResource magnetSound;
     [SerializeField] AudioResource getItemSound;
+    [SerializeField] AudioResource getChestContentSound;
+    [SerializeField] AudioResource endGameSound;
 
     [Space]
     [SerializeField] LayerMask submergedItemLayer;
-    [SerializeField] SubmergedItem[] firstSubmergedItems;
+    [ReorderableList, SerializeField] SubmergedItem[] firstSubmergedItems;
 
     //public int collisionCount = 0;
     readonly HashSet<Collider> collisions = new();
@@ -147,8 +163,7 @@ public class FishingHandler : MonoBehaviour
             if (item != null)
             {
                 fishingFloat.factor = item.masse / MagnetController.refMasse;
-                magnet2D.StartFishing(item.masse);
-
+                magnet2D.InitFishing(item.masse);
 
                 yield return new WaitForSeconds(1);
 
@@ -161,6 +176,19 @@ public class FishingHandler : MonoBehaviour
                 }
 
                 audioManager.PlaySFXAt(magnetSound, fishingFloat.transform.position);
+
+                if (item.masse >= 5 && !gameManager.GameState.Contains("has-super-magnet"))
+                {
+                    gameManager.sea.GenerateRipple(Utils.XZ(fishingFloat.transform.position), 0.25f);
+
+                    yield return new WaitForSeconds(0.7f);
+
+                    magnet2D.EndFishing(MagnetController.State.Failure);
+
+                    hud.ToastMessage(tooHeavyMessage);
+                }
+
+                magnet2D.StartFishing();
             }
             else
             {
@@ -215,14 +243,52 @@ public class FishingHandler : MonoBehaviour
                     gameManager.money += item.gramMasse;
 
                     ItemSlot itemSlot = new(gameManager.Inventory.Count);
-                    menu.itemRecordModal.OpenModal(item, itemSlot);
-                    while (menu.itemRecordModal.IsOpen) { yield return null; }
+                    menu.itemRecordModal.OpenModal(item, itemSlot, true);
+                    yield return new WaitUntil(() => !gameManager.menu.itemRecordModal.IsOpen);
                     gameManager.Inventory[item] = itemSlot;
 
                     if (gameManager.bikeItems.Contains(item))
                     {
                         menu.bikeQuestModal.OpenModal(item);
                         while (menu.bikeQuestModal.IsOpen) { yield return null; }
+                    }
+
+                    if (item == keyItem && !gameManager.Inventory.ContainsKey(chestItem))
+                    {
+                        gameManager.menu.Alert(keyMessage);
+                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                    }
+                    else if (item == chestItem && !gameManager.Inventory.ContainsKey(keyItem))
+                    {
+                        gameManager.menu.Alert(chestMessage);
+                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                    }
+                    else if (gameManager.Inventory.ContainsKey(keyItem) && gameManager.Inventory.ContainsKey(chestItem))
+                    {
+                        gameManager.menu.Alert(openChestMessage);
+                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+
+                        audioManager.PlayUI(getChestContentSound);
+                        menu.itemRecordModal.OpenModal(chestContentItem, new(0), true);
+                        yield return new WaitUntil(() => !gameManager.menu.itemRecordModal.IsOpen);
+
+                        gameManager.UnlockAchievement(chestAchievement);
+                    }
+
+                    if (gameManager.money >= gameManager.menu.shopModal.shopItems[0].cost && !gameManager.GameState.Contains("featured-shop"))
+                    {
+                        gameManager.GameState.Add("featured-shop");
+                        gameManager.menu.Alert(featuredShopMessage);
+                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                    }
+
+                    if (gameManager.Inventory.Count == gameManager.itemCount)
+                    {
+                        audioManager.PlayUI(endGameSound);
+                        gameManager.menu.Alert(endGameMessage);
+                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                        gameManager.menu.creditsModal.OpenModal();
+                        yield return new WaitUntil(() => !gameManager.menu.creditsModal.IsOpen);
                     }
 
                     gameManager.HideMouse();

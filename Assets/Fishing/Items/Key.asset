@@ -17,6 +17,6 @@ MonoBehaviour:
   rotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
   recenter: 1
   itemName: "Petite cl\xE9"
-  obstacle: {fileID: 0}
-  masse: 1
+  obstacle: {fileID: 1113464416229615483, guid: bc0f42625a822bf49a774704843f0041, type: 3}
+  masse: 2
   gramMasse: 87

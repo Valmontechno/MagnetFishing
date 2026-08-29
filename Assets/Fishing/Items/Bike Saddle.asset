@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 0
   itemName: "Selle de v\xE9lo"
   obstacle: {fileID: 0}
-  masse: 1
+  masse: 1.5
   gramMasse: 301

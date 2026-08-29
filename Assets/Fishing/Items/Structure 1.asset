@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Structure
   obstacle: {fileID: 0}
-  masse: 1
+  masse: 3
   gramMasse: 5838

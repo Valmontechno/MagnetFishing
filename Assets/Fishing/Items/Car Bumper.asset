@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Pare-chocs
   obstacle: {fileID: 5652421401231052143, guid: a79a032d82104f14a8f95214e5bb85a3, type: 3}
-  masse: 3
+  masse: 4
   gramMasse: 26713

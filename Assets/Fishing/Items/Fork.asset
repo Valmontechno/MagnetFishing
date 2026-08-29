@@ -16,7 +16,7 @@ MonoBehaviour:
   visual: {fileID: 919132149155446097, guid: af8370f75be17d24ba1ca16a2e497c1a, type: 3}
   rotation: {x: 0.70710677, y: 0.70710677, z: -0.00000003090862, w: -0.00000003090862}
   recenter: 1
-  itemName: Lunettes
+  itemName: Fourchette
   obstacle: {fileID: 3450980387350803596, guid: 5a8b82a40e5e48c4685d1b54d5c1211d, type: 3}
   masse: 1
   gramMasse: 43

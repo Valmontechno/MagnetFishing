@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b134c89efed394795a09acad6cddcd, type: 3}
+  m_Name: OpenChest
+  m_EditorClassIdentifier: Assembly-CSharp::Achievement
+  title: "\xC0 moi les tr\xE9sors"
+  icon: {fileID: 21300000, guid: 77d8222c24f333e4aab3190c9b1aaa47, type: 3}
+  description: "Ouvrez le coffre au tr\xE9sor."

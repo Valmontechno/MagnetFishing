@@ -18,5 +18,5 @@ MonoBehaviour:
   recenter: 1
   itemName: Roue de voiture
   obstacle: {fileID: 551091498665984186, guid: 3284f277c67633b48a6776498beeefed, type: 3}
-  masse: 1
+  masse: 6
   gramMasse: 9221

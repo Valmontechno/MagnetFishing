@@ -6,6 +6,7 @@ public class NPC : MonoBehaviour
     NavMeshAgent agent;
     Animator animator;
 
+    [Multiline, SerializeField] string dialog;
     [ReorderableList, SerializeField] Transform[] destinations;
     int currentDestination = 0;
 
@@ -27,5 +28,12 @@ public class NPC : MonoBehaviour
         }
 
         animator.SetFloat("Speed", agent.isStopped ? 0 : 1);
+    }
+
+    public void Talk()
+    {
+        transform.rotation = Quaternion.Euler(0, Vector3.SignedAngle(Vector3.forward, GameManager.Instance.player.transform.position - transform.position, Vector3.up), 0);
+
+        GameManager.Instance.menu.dialogModal.OpenModal(dialog);
     }
 }
