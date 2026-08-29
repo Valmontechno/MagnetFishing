@@ -107,7 +107,7 @@ public class ItemRecordModal : Modal
             closeButton.GetComponentInChildren<TextMeshProUGUI>().text = buttonMessage1;
 
             moneySuffix.gameObject.SetActive(true);
-            float strticTotalGramMasse = GameManager.Instance.GetTotalGramMasse();
+            float staticTotalGramMasse = GameManager.Instance.GetTotalGramMasse();
 
             const float stepDuration = 0.01f;
             float duration = Utils.Remap(item.gramMasse, 10, 30000, 0.5f, 2f);
@@ -116,7 +116,7 @@ public class ItemRecordModal : Modal
             {
                 int ic = Mathf.Min(i, item.gramMasse);
                 gramMass = item.gramMasse - ic;
-                totalGramMass = strticTotalGramMasse + (item == chestContentItem ? 0 : ic);
+                totalGramMass = staticTotalGramMasse + (item == chestContentItem ? 0 : ic);
                 money = GameManager.Instance.money - item.gramMasse + ic;
                 moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "+{0:N3}\n{1:N3}\n{2:N0}", gramMass / 1000f, totalGramMass / 1000f, money);
 
@@ -125,7 +125,7 @@ public class ItemRecordModal : Modal
                 yield return new WaitForSecondsRealtime(stepDuration);
             }
 
-            totalGramMass = strticTotalGramMasse + item.gramMasse;
+            totalGramMass = staticTotalGramMasse + item.gramMasse;
             money = GameManager.Instance.money;
             moneyText.text = string.Format(CultureInfo.GetCultureInfo("fr-FR"), "+0\n{1:N3}\n{2:N0}", 0, totalGramMass / 1000f, money);
 

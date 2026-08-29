@@ -253,26 +253,31 @@ public class FishingHandler : MonoBehaviour
                         while (menu.bikeQuestModal.IsOpen) { yield return null; }
                     }
 
-                    if (item == keyItem && !gameManager.Inventory.ContainsKey(chestItem))
+                    if (!gameManager.GameState.Contains("chest-open"))
                     {
-                        gameManager.menu.Alert(keyMessage);
-                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
-                    }
-                    else if (item == chestItem && !gameManager.Inventory.ContainsKey(keyItem))
-                    {
-                        gameManager.menu.Alert(chestMessage);
-                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
-                    }
-                    else if (gameManager.Inventory.ContainsKey(keyItem) && gameManager.Inventory.ContainsKey(chestItem))
-                    {
-                        gameManager.menu.Alert(openChestMessage);
-                        yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                        if (item == keyItem && !gameManager.Inventory.ContainsKey(chestItem))
+                        {
+                            gameManager.menu.Alert(keyMessage);
+                            yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                        }
+                        else if (item == chestItem && !gameManager.Inventory.ContainsKey(keyItem))
+                        {
+                            gameManager.menu.Alert(chestMessage);
+                            yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
+                        }
+                        else if (gameManager.Inventory.ContainsKey(keyItem) && gameManager.Inventory.ContainsKey(chestItem))
+                        {
+                            gameManager.GameState.Add("chest-open");
 
-                        audioManager.PlayUI(getChestContentSound);
-                        menu.itemRecordModal.OpenModal(chestContentItem, new(0), true);
-                        yield return new WaitUntil(() => !gameManager.menu.itemRecordModal.IsOpen);
+                            gameManager.menu.Alert(openChestMessage);
+                            yield return new WaitUntil(() => !gameManager.menu.alertModal.IsOpen);
 
-                        gameManager.UnlockAchievement(chestAchievement);
+                            audioManager.PlayUI(getChestContentSound);
+                            menu.itemRecordModal.OpenModal(chestContentItem, new(0), true);
+                            yield return new WaitUntil(() => !gameManager.menu.itemRecordModal.IsOpen);
+
+                            gameManager.UnlockAchievement(chestAchievement);
+                        }
                     }
 
                     if (gameManager.money >= gameManager.menu.shopModal.shopItems[0].cost && !gameManager.GameState.Contains("featured-shop"))
